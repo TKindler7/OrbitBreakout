@@ -1,0 +1,822 @@
+{
+  "map": "/Game/OrbitBreakout/Maps/L_EmergencyDeparture",
+  "actor_count": 2168,
+  "generated_counts": {
+    "Architecture": 478,
+    "Signage": 117,
+    "Fixtures": 88,
+    "Lighting": 38,
+    "Dressing": 1184,
+    "Gameplay": 41,
+    "Cover": 56,
+    "Space": 148,
+    "Encounters": 16,
+    "Navigation": 1
+  },
+  "encounters": {
+    "1": 3,
+    "2": 3,
+    "3": 2,
+    "4": 3,
+    "5": 1,
+    "6": 4
+  },
+  "heavy_count": 1,
+  "heavy_health": 2400.0,
+  "helix_racks": 1,
+  "station_zones": [
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "errors": [],
+  "navigation": {
+    "status": "PASS",
+    "projections": [
+      {
+        "name": "start_location",
+        "source": [
+          -600.0,
+          0.0,
+          100.0
+        ],
+        "projected": [
+          -600.0,
+          -0.0,
+          10.0
+        ]
+      },
+      {
+        "name": "cargo_checkpoint_location",
+        "source": [
+          5070.0,
+          0.0,
+          100.0
+        ],
+        "projected": [
+          5070.0,
+          -0.0,
+          10.0
+        ]
+      },
+      {
+        "name": "reactor_checkpoint_location",
+        "source": [
+          12000.0,
+          0.0,
+          100.0
+        ],
+        "projected": [
+          12000.0,
+          -0.0,
+          10.0
+        ]
+      },
+      {
+        "name": "E01_EN01_start",
+        "source": [
+          2350.0,
+          80.0,
+          100.0
+        ],
+        "projected": [
+          2350.0,
+          80.0,
+          10.0
+        ]
+      },
+      {
+        "name": "E01_EN01_target",
+        "source": [
+          1850.0,
+          0.0,
+          100.0
+        ],
+        "projected": [
+          1850.0,
+          -0.0,
+          10.0
+        ]
+      },
+      {
+        "name": "E01_EN02_start",
+        "source": [
+          3200.0,
+          -150.0,
+          100.0
+        ],
+        "projected": [
+          3200.0,
+          -150.0,
+          10.0
+        ]
+      },
+      {
+        "name": "E01_EN02_target",
+        "source": [
+          1850.0,
+          0.0,
+          100.0
+        ],
+        "projected": [
+          1850.0,
+          -0.0,
+          10.0
+        ]
+      },
+      {
+        "name": "E01_EN03_start",
+        "source": [
+          4100.0,
+          140.0,
+          100.0
+        ],
+        "projected": [
+          4100.0,
+          140.0,
+          10.0
+        ]
+      },
+      {
+        "name": "E01_EN03_target",
+        "source": [
+          1850.0,
+          0.0,
+          100.0
+        ],
+        "projected": [
+          1850.0,
+          -0.0,
+          10.0
+        ]
+      },
+      {
+        "name": "E02_EN01_start",
+        "source": [
+          6200.0,
+          -700.0,
+          100.0
+        ],
+        "projected": [
+          6200.0,
+          -700.0,
+          10.0
+        ]
+      },
+      {
+        "name": "E02_EN01_target",
+        "source": [
+          5520.0,
+          0.0,
+          100.0
+        ],
+        "projected": [
+          5520.0,
+          -0.0,
+          10.0
+        ]
+      },
+      {
+        "name": "E02_EN02_start",
+        "source": [
+          7100.0,
+          650.0,
+          100.0
+        ],
+        "projected": [
+          7100.0,
+          650.0,
+          10.0
+        ]
+      },
+      {
+        "name": "E02_EN02_target",
+        "source": [
+          5520.0,
+          0.0,
+          100.0
+        ],
+        "projected": [
+          5520.0,
+          -0.0,
+          10.0
+        ]
+      },
+      {
+        "name": "E02_EN03_start",
+        "source": [
+          7900.0,
+          -550.0,
+          100.0
+        ],
+        "projected": [
+          7900.0,
+          -550.0,
+          10.0
+        ]
+      },
+      {
+        "name": "E02_EN03_target",
+        "source": [
+          5520.0,
+          0.0,
+          100.0
+        ],
+        "projected": [
+          5520.0,
+          -0.0,
+          10.0
+        ]
+      },
+      {
+        "name": "E03_EN01_start",
+        "source": [
+          8120.0,
+          900.0,
+          100.0
+        ],
+        "projected": [
+          8123.4,
+          906.8,
+          10.0
+        ]
+      },
+      {
+        "name": "E03_EN01_target",
+        "source": [
+          5520.0,
+          0.0,
+          100.0
+        ],
+        "projected": [
+          5520.0,
+          -0.0,
+          10.0
+        ]
+      },
+      {
+        "name": "E03_EN02_start",
+        "source": [
+          8250.0,
+          1130.0,
+          100.0
+        ],
+        "projected": [
+          8250.0,
+          1130.0,
+          10.0
+        ]
+      },
+      {
+        "name": "E03_EN02_target",
+        "source": [
+          5520.0,
+          0.0,
+          100.0
+        ],
+        "projected": [
+          5520.0,
+          -0.0,
+          10.0
+        ]
+      },
+      {
+        "name": "E04_EN01_start",
+        "source": [
+          10000.0,
+          600.0,
+          100.0
+        ],
+        "projected": [
+          10000.0,
+          600.0,
+          10.0
+        ]
+      },
+      {
+        "name": "E04_EN01_target",
+        "source": [
+          9350.0,
+          0.0,
+          100.0
+        ],
+        "projected": [
+          9350.0,
+          -0.0,
+          10.0
+        ]
+      },
+      {
+        "name": "E04_EN02_start",
+        "source": [
+          10550.0,
+          650.0,
+          100.0
+        ],
+        "projected": [
+          10550.0,
+          650.0,
+          10.0
+        ]
+      },
+      {
+        "name": "E04_EN02_target",
+        "source": [
+          9350.0,
+          0.0,
+          100.0
+        ],
+        "projected": [
+          9350.0,
+          -0.0,
+          10.0
+        ]
+      },
+      {
+        "name": "E04_EN03_start",
+        "source": [
+          10600.0,
+          -200.0,
+          100.0
+        ],
+        "projected": [
+          10600.0,
+          -200.0,
+          10.0
+        ]
+      },
+      {
+        "name": "E04_EN03_target",
+        "source": [
+          9350.0,
+          0.0,
+          100.0
+        ],
+        "projected": [
+          9350.0,
+          -0.0,
+          10.0
+        ]
+      },
+      {
+        "name": "E05_EN03_start",
+        "source": [
+          14400.0,
+          0.0,
+          116.0
+        ],
+        "projected": [
+          14400.0,
+          -0.0,
+          10.0
+        ]
+      },
+      {
+        "name": "E05_EN03_target",
+        "source": [
+          12500.0,
+          0.0,
+          116.0
+        ],
+        "projected": [
+          12500.0,
+          -0.0,
+          10.0
+        ]
+      },
+      {
+        "name": "E06_EN01_start",
+        "source": [
+          16500.0,
+          -650.0,
+          100.0
+        ],
+        "projected": [
+          16500.0,
+          -650.0,
+          10.0
+        ]
+      },
+      {
+        "name": "E06_EN01_target",
+        "source": [
+          16100.0,
+          0.0,
+          100.0
+        ],
+        "projected": [
+          16100.0,
+          -0.0,
+          10.0
+        ]
+      },
+      {
+        "name": "E06_EN02_start",
+        "source": [
+          17100.0,
+          650.0,
+          100.0
+        ],
+        "projected": [
+          17100.0,
+          650.0,
+          10.0
+        ]
+      },
+      {
+        "name": "E06_EN02_target",
+        "source": [
+          16100.0,
+          0.0,
+          100.0
+        ],
+        "projected": [
+          16100.0,
+          -0.0,
+          10.0
+        ]
+      },
+      {
+        "name": "E06_EN03_start",
+        "source": [
+          17900.0,
+          -700.0,
+          100.0
+        ],
+        "projected": [
+          17900.0,
+          -700.0,
+          10.0
+        ]
+      },
+      {
+        "name": "E06_EN03_target",
+        "source": [
+          16100.0,
+          0.0,
+          100.0
+        ],
+        "projected": [
+          16100.0,
+          -0.0,
+          10.0
+        ]
+      },
+      {
+        "name": "E06_EN04_start",
+        "source": [
+          18300.0,
+          600.0,
+          100.0
+        ],
+        "projected": [
+          18300.0,
+          600.0,
+          10.0
+        ]
+      },
+      {
+        "name": "E06_EN04_target",
+        "source": [
+          16100.0,
+          0.0,
+          100.0
+        ],
+        "projected": [
+          16100.0,
+          -0.0,
+          10.0
+        ]
+      },
+      {
+        "name": "CargoAcross_start",
+        "source": [
+          5520.0,
+          0.0,
+          100.0
+        ],
+        "projected": [
+          5520.0,
+          -0.0,
+          10.0
+        ]
+      },
+      {
+        "name": "CargoAcross_target",
+        "source": [
+          8380.0,
+          0.0,
+          100.0
+        ],
+        "projected": [
+          8380.0,
+          -0.0,
+          10.0
+        ]
+      },
+      {
+        "name": "CargoRamp_start",
+        "source": [
+          6200.0,
+          720.0,
+          100.0
+        ],
+        "projected": [
+          6200.0,
+          720.0,
+          10.0
+        ]
+      },
+      {
+        "name": "CargoRamp_target",
+        "source": [
+          7350.0,
+          1160.0,
+          190.0
+        ],
+        "projected": [
+          7350.0,
+          1160.0,
+          160.0
+        ]
+      },
+      {
+        "name": "ReactorAcross_start",
+        "source": [
+          12500.0,
+          0.0,
+          100.0
+        ],
+        "projected": [
+          12500.0,
+          -0.0,
+          10.0
+        ]
+      },
+      {
+        "name": "ReactorAcross_target",
+        "source": [
+          14850.0,
+          0.0,
+          100.0
+        ],
+        "projected": [
+          14850.0,
+          -0.0,
+          10.0
+        ]
+      },
+      {
+        "name": "HelixApproach_start",
+        "source": [
+          12000.0,
+          0.0,
+          100.0
+        ],
+        "projected": [
+          12000.0,
+          -0.0,
+          10.0
+        ]
+      },
+      {
+        "name": "HelixApproach_target",
+        "source": [
+          12090.0,
+          280.0,
+          100.0
+        ],
+        "projected": [
+          12090.0,
+          280.0,
+          10.0
+        ]
+      },
+      {
+        "name": "ReactorDodgeSouth_start",
+        "source": [
+          13800.0,
+          0.0,
+          100.0
+        ],
+        "projected": [
+          13800.0,
+          -0.0,
+          10.0
+        ]
+      },
+      {
+        "name": "ReactorDodgeSouth_target",
+        "source": [
+          13800.0,
+          -620.0,
+          100.0
+        ],
+        "projected": [
+          13800.0,
+          -620.0,
+          10.0
+        ]
+      },
+      {
+        "name": "ReactorDodgeNorth_start",
+        "source": [
+          14400.0,
+          0.0,
+          100.0
+        ],
+        "projected": [
+          14400.0,
+          -0.0,
+          10.0
+        ]
+      },
+      {
+        "name": "ReactorDodgeNorth_target",
+        "source": [
+          14500.0,
+          610.0,
+          100.0
+        ],
+        "projected": [
+          14500.0,
+          610.0,
+          10.0
+        ]
+      },
+      {
+        "name": "BayAcross_start",
+        "source": [
+          16100.0,
+          0.0,
+          100.0
+        ],
+        "projected": [
+          16100.0,
+          -0.0,
+          10.0
+        ]
+      },
+      {
+        "name": "BayAcross_target",
+        "source": [
+          18300.0,
+          250.0,
+          100.0
+        ],
+        "projected": [
+          18300.0,
+          250.0,
+          10.0
+        ]
+      }
+    ],
+    "paths": [
+      {
+        "name": "E01_EN01",
+        "valid": true,
+        "partial": false,
+        "length_cm": 506.3595560468865
+      },
+      {
+        "name": "E01_EN02",
+        "valid": true,
+        "partial": false,
+        "length_cm": 1359.156924320664
+      },
+      {
+        "name": "E01_EN03",
+        "valid": true,
+        "partial": false,
+        "length_cm": 2254.3513479491166
+      },
+      {
+        "name": "E02_EN01",
+        "valid": true,
+        "partial": false,
+        "length_cm": 975.9098319004681
+      },
+      {
+        "name": "E02_EN02",
+        "valid": true,
+        "partial": false,
+        "length_cm": 1708.4788555905513
+      },
+      {
+        "name": "E02_EN03",
+        "valid": true,
+        "partial": false,
+        "length_cm": 2517.0223897586907
+      },
+      {
+        "name": "E03_EN01",
+        "valid": true,
+        "partial": false,
+        "length_cm": 2980.9172766777647
+      },
+      {
+        "name": "E03_EN02",
+        "valid": true,
+        "partial": false,
+        "length_cm": 3168.568913644511
+      },
+      {
+        "name": "E04_EN01",
+        "valid": true,
+        "partial": false,
+        "length_cm": 942.4366242481108
+      },
+      {
+        "name": "E04_EN02",
+        "valid": true,
+        "partial": false,
+        "length_cm": 1488.2822710102323
+      },
+      {
+        "name": "E04_EN03",
+        "valid": true,
+        "partial": false,
+        "length_cm": 1265.8988901172163
+      },
+      {
+        "name": "E05_EN03",
+        "valid": true,
+        "partial": false,
+        "length_cm": 1900.0
+      },
+      {
+        "name": "E06_EN01",
+        "valid": true,
+        "partial": false,
+        "length_cm": 763.2168761236874
+      },
+      {
+        "name": "E06_EN02",
+        "valid": true,
+        "partial": false,
+        "length_cm": 1234.784436716758
+      },
+      {
+        "name": "E06_EN03",
+        "valid": true,
+        "partial": false,
+        "length_cm": 2001.7126416246524
+      },
+      {
+        "name": "E06_EN04",
+        "valid": true,
+        "partial": false,
+        "length_cm": 2292.378662391231
+      },
+      {
+        "name": "CargoAcross",
+        "valid": true,
+        "partial": false,
+        "length_cm": 3074.306182423864
+      },
+      {
+        "name": "CargoRamp",
+        "valid": true,
+        "partial": false,
+        "length_cm": 1433.670512434724
+      },
+      {
+        "name": "ReactorAcross",
+        "valid": true,
+        "partial": false,
+        "length_cm": 2350.0
+      },
+      {
+        "name": "HelixApproach",
+        "valid": true,
+        "partial": false,
+        "length_cm": 294.10882339705483
+      },
+      {
+        "name": "ReactorDodgeSouth",
+        "valid": true,
+        "partial": false,
+        "length_cm": 620.0
+      },
+      {
+        "name": "ReactorDodgeNorth",
+        "valid": true,
+        "partial": false,
+        "length_cm": 618.1423784210236
+      },
+      {
+        "name": "BayAcross",
+        "valid": true,
+        "partial": false,
+        "length_cm": 2243.521302026089
+      }
+    ],
+    "errors": [],
+    "scope": "Editor navmesh spawn projections and encounter/ramp paths with authored gates closed; runtime door updates, player collision and playthrough still require testing",
+    "wait_seconds": 5.3
+  },
+  "status": "PASS_STRUCTURE_AND_NAVIGATION",
+  "saved_after_navigation": true
+}

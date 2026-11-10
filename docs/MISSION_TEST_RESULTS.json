@@ -1,0 +1,32 @@
+{
+  "tests": [
+    {
+      "name": "OrbitBreakout.Mission.PIE.ProgressionAndRecovery",
+      "state": "Success",
+      "duration": 16.28144073486328,
+      "errors": [],
+      "warnings": [
+        "LogStreaming: Failed to read file '../../../../../../teddykindler/Documents/ChatGPT/Unreal Engine Game 1/OrbitBreakout/Saved/SaveGames/OB_Settings.sav' error.",
+        "LogAudioMixerAudioUnit: Error querying Sample Rate: 2003332927",
+        "LogCrowdFollowing: Unable to find RecastNavMesh instance while trying to create UCrowdManager instance",
+        "LogCrowdFollowing: Unable to find RecastNavMesh instance while trying to create UCrowdManager instance",
+        "LogCrowdFollowing: Unable to find RecastNavMesh instance while trying to create UCrowdManager instance",
+        "LogCrowdFollowing: Unable to find RecastNavMesh instance while trying to create UCrowdManager instance",
+        "LogCrowdFollowing: Unable to find RecastNavMesh instance while trying to create UCrowdManager instance"
+      ]
+    }
+  ],
+  "passed": 1,
+  "failed": 0,
+  "skipped": 0,
+  "total": 1,
+  "duration": 16.28144073486328,
+  "validation_scope": "Editor automation: owns PIE, uses real fire input and weapon traces for one corridor enemy; later enemy damage and mission positioning are scripted. Not a full manual traversal or packaged-game verification.",
+  "warning_review": {
+    "crowd_navigation": "All five warnings occur at world teardown, not during active navigation.",
+    "settings": "No settings save exists; defaults used.",
+    "audio": "Unreal Mac CoreAudio device sample-rate query warning; mixer continues at configured 48kHz.",
+    "alarm": "Fixed SoundWave looping flag and generator; orphaned alarm warnings absent on final run."
+  },
+  "after_trigger_collision_fix": true
+}

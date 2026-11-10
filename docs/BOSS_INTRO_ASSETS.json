@@ -1,0 +1,11 @@
+{
+  "saved": true,
+  "checked_utc": "2026-11-06T21:26:00.449169+00:00",
+  "actor": "/Game/OrbitBreakout/Maps/L_EmergencyDeparture.L_EmergencyDeparture:PersistentLevel.OBEnemyCharacter_11",
+  "animation": "/Game/SciFi_Beast06/Animations/Anim_SciFi_Beast06_Rage.Anim_SciFi_Beast06_Rage",
+  "original_clip_seconds": 1.3333333730697632,
+  "intro_seconds": 2.4,
+  "sound": "/Game/OrbitBreakout/Audio/S_BossIntro.S_BossIntro",
+  "boss_health": 2400.0,
+  "scope": "Targeted actor/asset save. No mission save access or map regeneration."
+}

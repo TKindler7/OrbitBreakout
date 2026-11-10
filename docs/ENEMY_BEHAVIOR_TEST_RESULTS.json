@@ -1,0 +1,64 @@
+{
+  "tests": [
+    {
+      "name": "OrbitBreakout.Enemies.AwarenessAndCover",
+      "state": "Success",
+      "duration": 0.16618841886520386,
+      "errors": [],
+      "warnings": [
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_0:PersistentLevel.OBEnemyCharacter_0)",
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_0:PersistentLevel.OBEnemyCharacter_0)",
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_0:PersistentLevel.OBEnemyCharacter_0)",
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_0:PersistentLevel.OBEnemyCharacter_1)",
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_0:PersistentLevel.OBEnemyCharacter_1)",
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_0:PersistentLevel.OBEnemyCharacter_1)"
+      ]
+    },
+    {
+      "name": "OrbitBreakout.Enemies.DeathDisappears",
+      "state": "Success",
+      "duration": 0.3824969232082367,
+      "errors": [],
+      "warnings": [
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_1:PersistentLevel.OBEnemyCharacter_0)",
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_1:PersistentLevel.OBEnemyCharacter_0)",
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_1:PersistentLevel.OBEnemyCharacter_0)"
+      ]
+    },
+    {
+      "name": "OrbitBreakout.Logic.Checkpoint.ContinueEligibility",
+      "state": "Success",
+      "duration": 0.020781416445970535,
+      "errors": [],
+      "warnings": [
+        "LogEOSSDK: LogEOS: Error response received from backend. ServiceName=[OAuth], OperationName=[TokenGrantv2], Url=[<Redacted>], HttpStatus=[400], ErrorCode=[errors.com.epicgames.account.oauth.authorization_pending], NumericErrorCode=[18115], ErrorMessage=[The authorization server request is still pending as the end user has yet to visit and enter the verification code.], CorrId=[EOS-zTbCxS7kQMuUlfGSBnWuIQ-OL1MY9xZRCyx_Fbdi1VmBQ]"
+      ]
+    },
+    {
+      "name": "OrbitBreakout.Logic.Checkpoint.ValidateBoundaries",
+      "state": "Success",
+      "duration": 0.022667251527309418,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "OrbitBreakout.Logic.Persistence.MemoryRoundTrip",
+      "state": "Success",
+      "duration": 0.010686080902814865,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "OrbitBreakout.Logic.Settings.ClampAndPreserve",
+      "state": "Success",
+      "duration": 0.014776080846786499,
+      "errors": [],
+      "warnings": []
+    }
+  ],
+  "passed": 6,
+  "failed": 0,
+  "skipped": 0,
+  "total": 6,
+  "duration": 0.6175961494445801
+}

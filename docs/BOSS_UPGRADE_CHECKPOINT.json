@@ -1,0 +1,72 @@
+{
+  "created_utc": "2026-11-06T20:59:10.616360+00:00",
+  "status": "SAVED_AND_CHECKED",
+  "actor_count": 2168,
+  "enemies": 16,
+  "reactor_enemies": 1,
+  "boss_health": 2400,
+  "native_tests_passed": 10,
+  "navigation_paths_passed": 23,
+  "navigation_projections_passed": 49,
+  "mission_save_sha256": "6c67f3ad71246e12533dd8179ee855dfde6ca9971dbfeb73c7166fcac7f8f43e",
+  "mission_save_unchanged": true,
+  "full_mission_playthrough": "NOT_RUN",
+  "new_standalone_package": "NOT_BUILT",
+  "files": [
+    {
+      "path": "OrbitBreakout.uproject",
+      "bytes": 734,
+      "sha256": "d8b6f4fdf3238641d5366824707c018dfe6c2bd15b24cc3b7d40b6e42c32020a"
+    },
+    {
+      "path": "Content/OrbitBreakout/Maps/L_EmergencyDeparture.umap",
+      "bytes": 4983032,
+      "sha256": "116ecab82829f206d57db0311bae0342c641d1b30c6e5e32f97fb2775241887c"
+    },
+    {
+      "path": "Source/OrbitBreakout/OBEnemyCharacter.cpp",
+      "bytes": 43676,
+      "sha256": "255309605b807f2f398eac2925e1f6c54e34da1b161d50449e574f1abda1f275"
+    },
+    {
+      "path": "Source/OrbitBreakout/OBEnemyCharacter.h",
+      "bytes": 12224,
+      "sha256": "fc60e314365d7c8c4a1c1e8a90334162c0b57024dbb92f1eccc7cee48114d9ec"
+    },
+    {
+      "path": "Source/OrbitBreakout/OBPlayerCharacter.cpp",
+      "bytes": 32446,
+      "sha256": "98c4faf70767ac2f3cb623a7be0a15cadedc6c7ddb27cc6b88469ecf19a16c1f"
+    },
+    {
+      "path": "Source/OrbitBreakout/OBPlayerCharacter.h",
+      "bytes": 9062,
+      "sha256": "ae2487678c20ece5854aee96f56474bc1ecb809c19ddbe61ff24ec18ee75db75"
+    },
+    {
+      "path": "Source/OrbitBreakout/OBCore.cpp",
+      "bytes": 33168,
+      "sha256": "c1a4c572a2fd5a528dc5c2007ae47d8393ea1a6f7c0d1235653f0b647b619725"
+    },
+    {
+      "path": "Source/OrbitBreakout/OBCore.h",
+      "bytes": 7897,
+      "sha256": "24c54b034ff1294b916f58129a4377619cebea010eb8637b0348cdee03eb1e26"
+    },
+    {
+      "path": "Source/OrbitBreakout/OBUI.cpp",
+      "bytes": 29122,
+      "sha256": "0f55b3bd8daef2780bd49f973b5dc3d27fb98ef83157ff0ba0a94f977a37c0b9"
+    },
+    {
+      "path": "Config/DefaultInput.ini",
+      "bytes": 10814,
+      "sha256": "8f5df5d9f4f0dd2f28f38a7dced59a267249b2578e7094fa002f192e4cffe980"
+    },
+    {
+      "path": "Scripts/bootstrap_content.py",
+      "bytes": 80634,
+      "sha256": "a1e4b45a804d94c757f96951439b9b481b421f42ddf1698646860fd58f2cf4f8"
+    }
+  ]
+}

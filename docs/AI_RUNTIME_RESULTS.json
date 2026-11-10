@@ -1,0 +1,3463 @@
+{
+  "status": "PASS",
+  "runtime_checks_executed": true,
+  "started_utc": "2026-11-06T06:07:01.316595+00:00",
+  "finished_utc": "2026-11-06T06:07:07.807272+00:00",
+  "scope": "Scripted PIE setup followed by unmodified AI, navigation, projectile collision and player-damage observation; not a human playthrough.",
+  "setup": [
+    {
+      "action": "controller.PerformAction(NewMission)",
+      "existing_save": false
+    },
+    {
+      "action": "position at authored weapon rack and call AcquireWeapon",
+      "location": [
+        170.0,
+        -220.0,
+        100.0
+      ]
+    },
+    {
+      "action": "enter authored corridor trigger",
+      "location": [
+        1780.0,
+        0.0,
+        100.0
+      ]
+    },
+    {
+      "action": "position stationary observer; leave all enemy AI active",
+      "location": [
+        1500.0,
+        350.0,
+        100.0
+      ]
+    }
+  ],
+  "observation_seconds_game_time": 6.009,
+  "stop_reason": "six_game_seconds_observed",
+  "initial_player_health": 100.0,
+  "final_player_health": 10.0,
+  "player_health_lost": 90.0,
+  "max_horizontal_displacement_cm": {
+    "E01_EN01": 91.657,
+    "E01_EN02": 598.011,
+    "E01_EN03": 0.0
+  },
+  "observed_projectiles": [
+    {
+      "actor": "/Game/OrbitBreakout/Maps/UEDPIE_0_L_EmergencyDeparture.L_EmergencyDeparture:PersistentLevel.OBEnemyProjectile_0",
+      "first_seen_seconds": 1.859,
+      "location": [
+        2253.439,
+        92.788,
+        136.75
+      ],
+      "owner": "E01_EN01"
+    },
+    {
+      "actor": "/Game/OrbitBreakout/Maps/UEDPIE_0_L_EmergencyDeparture.L_EmergencyDeparture:PersistentLevel.OBEnemyProjectile_1",
+      "first_seen_seconds": 2.024,
+      "location": [
+        2252.453,
+        94.166,
+        139.468
+      ],
+      "owner": "E01_EN01"
+    },
+    {
+      "actor": "/Game/OrbitBreakout/Maps/UEDPIE_0_L_EmergencyDeparture.L_EmergencyDeparture:PersistentLevel.OBEnemyProjectile_2",
+      "first_seen_seconds": 2.218,
+      "location": [
+        2253.883,
+        93.311,
+        139.052
+      ],
+      "owner": "E01_EN01"
+    },
+    {
+      "actor": "/Game/OrbitBreakout/Maps/UEDPIE_0_L_EmergencyDeparture.L_EmergencyDeparture:PersistentLevel.OBEnemyProjectile_3",
+      "first_seen_seconds": 4.066,
+      "location": [
+        2512.574,
+        -36.492,
+        138.364
+      ],
+      "owner": "E01_EN02"
+    },
+    {
+      "actor": "/Game/OrbitBreakout/Maps/UEDPIE_0_L_EmergencyDeparture.L_EmergencyDeparture:PersistentLevel.OBEnemyProjectile_4",
+      "first_seen_seconds": 4.242,
+      "location": [
+        2515.752,
+        -37.336,
+        140.374
+      ],
+      "owner": "E01_EN02"
+    },
+    {
+      "actor": "/Game/OrbitBreakout/Maps/UEDPIE_0_L_EmergencyDeparture.L_EmergencyDeparture:PersistentLevel.OBEnemyProjectile_5",
+      "first_seen_seconds": 4.416,
+      "location": [
+        2515.284,
+        -36.231,
+        139.768
+      ],
+      "owner": "E01_EN02"
+    },
+    {
+      "actor": "/Game/OrbitBreakout/Maps/UEDPIE_0_L_EmergencyDeparture.L_EmergencyDeparture:PersistentLevel.OBEnemyProjectile_6",
+      "first_seen_seconds": 4.468,
+      "location": [
+        2225.08,
+        17.429,
+        136.997
+      ],
+      "owner": "E01_EN01"
+    },
+    {
+      "actor": "/Game/OrbitBreakout/Maps/UEDPIE_0_L_EmergencyDeparture.L_EmergencyDeparture:PersistentLevel.OBEnemyProjectile_7",
+      "first_seen_seconds": 4.642,
+      "location": [
+        2230.344,
+        15.909,
+        139.752
+      ],
+      "owner": "E01_EN01"
+    },
+    {
+      "actor": "/Game/OrbitBreakout/Maps/UEDPIE_0_L_EmergencyDeparture.L_EmergencyDeparture:PersistentLevel.OBEnemyProjectile_8",
+      "first_seen_seconds": 4.817,
+      "location": [
+        2230.178,
+        15.594,
+        140.159
+      ],
+      "owner": "E01_EN01"
+    }
+  ],
+  "max_projectiles_alive": 5,
+  "damage_events": [
+    {
+      "seconds": 2.292,
+      "before": 100.0,
+      "after": 90.0,
+      "last_damage_time": 2.7650961875915527
+    },
+    {
+      "seconds": 2.441,
+      "before": 90.0,
+      "after": 80.0,
+      "last_damage_time": 2.9136955738067627
+    },
+    {
+      "seconds": 2.641,
+      "before": 80.0,
+      "after": 70.0,
+      "last_damage_time": 3.1139936447143555
+    },
+    {
+      "seconds": 4.642,
+      "before": 70.0,
+      "after": 60.0,
+      "last_damage_time": 5.114894866943359
+    },
+    {
+      "seconds": 4.834,
+      "before": 60.0,
+      "after": 50.0,
+      "last_damage_time": 5.306736946105957
+    },
+    {
+      "seconds": 4.901,
+      "before": 50.0,
+      "after": 40.0,
+      "last_damage_time": 5.373443126678467
+    },
+    {
+      "seconds": 5.01,
+      "before": 40.0,
+      "after": 30.0,
+      "last_damage_time": 5.482523441314697
+    },
+    {
+      "seconds": 5.082,
+      "before": 30.0,
+      "after": 20.0,
+      "last_damage_time": 5.55475378036499
+    },
+    {
+      "seconds": 5.249,
+      "before": 20.0,
+      "after": 10.0,
+      "last_damage_time": 5.72214937210083
+    }
+  ],
+  "checks": {
+    "enemy_moved_at_least_25cm": true,
+    "enemy_projectile_observed": true,
+    "player_lost_health_without_injected_damage": true,
+    "test_save_removed": true,
+    "editor_pie_left_paused_for_root": true
+  },
+  "cleanup": {
+    "editor_pie_left_paused_for_root": true,
+    "test_save_removed": true
+  },
+  "errors": [],
+  "samples": [
+    {
+      "seconds": 0.017,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 100.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2350.0,
+            80.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ACQUIRE: 2>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            3200.0,
+            -150.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 0.117,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 100.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2350.0,
+            80.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ACQUIRE: 2>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            3200.0,
+            -150.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 0.217,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 100.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2350.0,
+            80.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ACQUIRE: 2>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            3199.669,
+            -149.959,
+            92.15
+          ],
+          "velocity_cm_s": [
+            -19.852,
+            2.433,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 0.317,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 100.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2350.0,
+            80.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ACQUIRE: 2>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            3190.734,
+            -148.864,
+            92.15
+          ],
+          "velocity_cm_s": [
+            -138.975,
+            17.031,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 0.417,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 100.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2350.0,
+            80.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ACQUIRE: 2>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            3169.888,
+            -146.31,
+            92.15
+          ],
+          "velocity_cm_s": [
+            -258.069,
+            31.626,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 0.517,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 100.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2350.0,
+            80.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ACQUIRE: 2>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            3144.078,
+            -143.147,
+            92.15
+          ],
+          "velocity_cm_s": [
+            -258.069,
+            31.626,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 0.617,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 100.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2350.0,
+            80.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ACQUIRE: 2>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            3118.27,
+            -139.984,
+            92.15
+          ],
+          "velocity_cm_s": [
+            -258.069,
+            31.626,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 0.717,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 100.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2350.0,
+            80.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ACQUIRE: 2>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            3092.463,
+            -136.821,
+            92.15
+          ],
+          "velocity_cm_s": [
+            -258.069,
+            31.626,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 0.817,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 100.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2350.0,
+            80.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ACQUIRE: 2>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            3066.654,
+            -133.659,
+            92.15
+          ],
+          "velocity_cm_s": [
+            -258.069,
+            31.626,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 0.917,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 100.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2350.0,
+            80.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ACQUIRE: 2>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            3040.847,
+            -130.496,
+            92.15
+          ],
+          "velocity_cm_s": [
+            -258.069,
+            31.626,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 1.017,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 100.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2350.0,
+            80.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ACQUIRE: 2>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            3015.039,
+            -127.333,
+            92.15
+          ],
+          "velocity_cm_s": [
+            -258.069,
+            31.626,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 1.117,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 100.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2350.0,
+            80.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ACQUIRE: 2>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2989.229,
+            -124.17,
+            92.15
+          ],
+          "velocity_cm_s": [
+            -258.069,
+            31.626,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 1.217,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 100.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2350.0,
+            80.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ACQUIRE: 2>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2963.41,
+            -121.006,
+            92.15
+          ],
+          "velocity_cm_s": [
+            -258.069,
+            31.626,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 1.317,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 100.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2350.0,
+            80.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ACQUIRE: 2>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2937.6,
+            -117.843,
+            92.15
+          ],
+          "velocity_cm_s": [
+            -258.069,
+            31.626,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 1.417,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 100.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2350.0,
+            80.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ATTACK: 4>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2911.791,
+            -114.68,
+            92.15
+          ],
+          "velocity_cm_s": [
+            -258.069,
+            31.626,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 1.517,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 100.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2350.0,
+            80.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ATTACK: 4>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2885.95,
+            -111.513,
+            92.15
+          ],
+          "velocity_cm_s": [
+            -258.069,
+            31.626,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 1.618,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 100.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2350.0,
+            80.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ATTACK: 4>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2860.115,
+            -108.347,
+            92.15
+          ],
+          "velocity_cm_s": [
+            -258.069,
+            31.626,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 1.718,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 100.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2350.0,
+            80.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ATTACK: 4>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2834.305,
+            -105.184,
+            92.15
+          ],
+          "velocity_cm_s": [
+            -258.069,
+            31.626,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 1.825,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 100.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2350.0,
+            80.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ATTACK: 4>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2806.509,
+            -101.778,
+            92.15
+          ],
+          "velocity_cm_s": [
+            -258.069,
+            31.626,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 1.932,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 100.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2350.0,
+            80.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ATTACK: 4>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2778.906,
+            -98.395,
+            92.15
+          ],
+          "velocity_cm_s": [
+            -258.069,
+            31.626,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 2.041,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 100.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2350.0,
+            80.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ATTACK: 4>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2750.804,
+            -94.952,
+            92.15
+          ],
+          "velocity_cm_s": [
+            -258.069,
+            31.626,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 2.15,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 100.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2350.0,
+            80.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ATTACK: 4>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2722.788,
+            -91.518,
+            92.15
+          ],
+          "velocity_cm_s": [
+            -258.069,
+            31.626,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 2.258,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 100.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2350.0,
+            80.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ATTACK: 4>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2695.102,
+            -86.65,
+            92.15
+          ],
+          "velocity_cm_s": [
+            -250.46,
+            69.785,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 2.367,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 90.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2350.0,
+            80.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ATTACK: 4>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2681.741,
+            -84.139,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 2.474,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 80.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2350.0,
+            80.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.REPOSITION: 5>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN02": {
+          "location": [
+            2681.741,
+            -84.139,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 2.584,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 80.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2347.447,
+            71.962,
+            92.15
+          ],
+          "velocity_cm_s": [
+            -39.85,
+            -125.459,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.REPOSITION: 5>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN02": {
+          "location": [
+            2681.741,
+            -84.139,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 2.692,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 70.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2340.681,
+            50.661,
+            92.15
+          ],
+          "velocity_cm_s": [
+            -78.71,
+            -247.8,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.REPOSITION: 5>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN02": {
+          "location": [
+            2681.741,
+            -84.139,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 2.8,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 70.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2332.19,
+            23.928,
+            92.15
+          ],
+          "velocity_cm_s": [
+            -78.71,
+            -247.8,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.REPOSITION: 5>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN02": {
+          "location": [
+            2681.741,
+            -84.139,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 2.909,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 70.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2323.618,
+            -3.058,
+            92.15
+          ],
+          "velocity_cm_s": [
+            -78.71,
+            -247.8,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.REPOSITION: 5>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN02": {
+          "location": [
+            2681.741,
+            -84.139,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 3.017,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 70.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2322.253,
+            -7.356,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ACQUIRE: 2>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2681.741,
+            -84.139,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 3.125,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 70.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2322.253,
+            -7.356,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ACQUIRE: 2>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2681.741,
+            -84.139,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 3.235,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 70.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2322.253,
+            -7.356,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ACQUIRE: 2>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2680.699,
+            -83.762,
+            92.15
+          ],
+          "velocity_cm_s": [
+            -39.59,
+            14.288,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 3.349,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 70.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2322.253,
+            -7.356,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ACQUIRE: 2>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2667.446,
+            -78.979,
+            92.15
+          ],
+          "velocity_cm_s": [
+            -169.165,
+            61.053,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 3.461,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 70.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2322.253,
+            -7.356,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ACQUIRE: 2>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2641.99,
+            -69.792,
+            92.15
+          ],
+          "velocity_cm_s": [
+            -244.56,
+            88.264,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 3.567,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 70.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2322.253,
+            -7.356,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ACQUIRE: 2>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2616.153,
+            -60.467,
+            92.15
+          ],
+          "velocity_cm_s": [
+            -244.56,
+            88.264,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 3.676,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 70.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2322.253,
+            -7.356,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ACQUIRE: 2>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2609.671,
+            -54.456,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ATTACK: 4>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 3.783,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 70.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2322.253,
+            -7.356,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ACQUIRE: 2>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2609.671,
+            -54.456,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ATTACK: 4>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 3.892,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 70.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2322.253,
+            -7.356,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ACQUIRE: 2>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2609.671,
+            -54.456,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ATTACK: 4>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 3.994,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 70.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2322.253,
+            -7.356,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ACQUIRE: 2>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2609.671,
+            -54.456,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ATTACK: 4>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 4.099,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 70.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2322.253,
+            -7.356,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ATTACK: 4>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2609.671,
+            -54.456,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ATTACK: 4>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 4.208,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 70.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2322.253,
+            -7.356,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ATTACK: 4>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2609.671,
+            -54.456,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ATTACK: 4>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 4.309,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 70.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2322.253,
+            -7.356,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ATTACK: 4>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2609.671,
+            -54.456,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ATTACK: 4>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 4.416,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 70.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2322.253,
+            -7.356,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ATTACK: 4>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2609.671,
+            -54.456,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ATTACK: 4>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 4.524,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 70.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2322.253,
+            -7.356,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ATTACK: 4>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2609.671,
+            -54.456,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ATTACK: 4>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 4.625,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 70.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2322.253,
+            -7.356,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ATTACK: 4>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2609.671,
+            -54.456,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ATTACK: 4>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 4.727,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 60.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2322.253,
+            -7.356,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ATTACK: 4>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2610.399,
+            -52.459,
+            92.15
+          ],
+          "velocity_cm_s": [
+            21.181,
+            58.112,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.REPOSITION: 5>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 4.834,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 50.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2322.253,
+            -7.356,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ATTACK: 4>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2615.37,
+            -38.822,
+            92.15
+          ],
+          "velocity_cm_s": [
+            64.907,
+            178.073,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.REPOSITION: 5>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 4.934,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 40.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2322.253,
+            -7.356,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ATTACK: 4>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2623.761,
+            -15.801,
+            92.15
+          ],
+          "velocity_cm_s": [
+            89.038,
+            244.279,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.REPOSITION: 5>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 5.044,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 30.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2322.253,
+            -7.356,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ATTACK: 4>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2633.533,
+            11.009,
+            92.15
+          ],
+          "velocity_cm_s": [
+            89.038,
+            244.279,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.REPOSITION: 5>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 5.149,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 20.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2323.582,
+            -4.297,
+            92.15
+          ],
+          "velocity_cm_s": [
+            31.896,
+            73.392,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.REPOSITION: 5>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN02": {
+          "location": [
+            2641.384,
+            32.55,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.REPOSITION: 5>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 5.249,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 10.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2329.624,
+            9.606,
+            92.15
+          ],
+          "velocity_cm_s": [
+            80.065,
+            184.229,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.REPOSITION: 5>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN02": {
+          "location": [
+            2641.384,
+            32.55,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ACQUIRE: 2>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 5.349,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 10.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2339.602,
+            32.564,
+            92.15
+          ],
+          "velocity_cm_s": [
+            103.631,
+            238.455,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.REPOSITION: 5>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN02": {
+          "location": [
+            2641.384,
+            32.55,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ACQUIRE: 2>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 5.449,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 10.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2349.966,
+            56.411,
+            92.15
+          ],
+          "velocity_cm_s": [
+            103.631,
+            238.455,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.REPOSITION: 5>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN02": {
+          "location": [
+            2641.384,
+            32.55,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ACQUIRE: 2>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 5.549,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 10.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2358.605,
+            76.291,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.REPOSITION: 5>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2641.384,
+            32.55,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ACQUIRE: 2>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 5.658,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 10.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2358.605,
+            76.291,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ACQUIRE: 2>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2640.45,
+            33.285,
+            92.15
+          ],
+          "velocity_cm_s": [
+            -16.073,
+            12.64,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 5.759,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 10.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2358.605,
+            76.291,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ACQUIRE: 2>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2638.825,
+            34.562,
+            92.15
+          ],
+          "velocity_cm_s": [
+            -16.073,
+            12.64,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 5.859,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 10.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2358.605,
+            76.291,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ACQUIRE: 2>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2636.682,
+            36.649,
+            92.15
+          ],
+          "velocity_cm_s": [
+            -26.776,
+            29.092,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    },
+    {
+      "seconds": 5.959,
+      "player_location": [
+        1500.0,
+        350.0,
+        98.15
+      ],
+      "player_health": 10.0,
+      "enemies": {
+        "E01_EN01": {
+          "location": [
+            2358.605,
+            76.291,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.ACQUIRE: 2>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        },
+        "E01_EN02": {
+          "location": [
+            2634.004,
+            39.559,
+            92.15
+          ],
+          "velocity_cm_s": [
+            -26.776,
+            29.092,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.APPROACH: 3>",
+          "move_status": "<PathFollowingStatus.MOVING: 3>"
+        },
+        "E01_EN03": {
+          "location": [
+            4100.0,
+            140.0,
+            92.15
+          ],
+          "velocity_cm_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "health": 60.0,
+          "state": "<OBEnemyState.IDLE: 1>",
+          "move_status": "<PathFollowingStatus.IDLE: 0>"
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "Weapon acquisition uses AcquireWeapon at the rack, not simulated interaction input.",
+    "The observer does not assign damage, health, enemy state, movement destinations, or attack timings.",
+    "Health loss is attributed to normal enemy projectiles by the observed spawned projectile actors and unchanged damage code; no per-hit delegate is injected."
+  ]
+}

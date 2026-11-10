@@ -1,0 +1,16 @@
+{
+  "mesh": "/Game/SciFi_Beast06/Mesh/SK_SciFi_Beast06_Skin1.SK_SciFi_Beast06_Skin1",
+  "skeleton": "/Game/SciFi_Beast06/Mesh/SKEL_SciFi_Beast06_Skeleton.SKEL_SciFi_Beast06_Skeleton",
+  "animations": {
+    "heavy_idle_animation": "/Game/SciFi_Beast06/Animations/Anim_SciFi_Beast06_Idle1.Anim_SciFi_Beast06_Idle1",
+    "heavy_move_animation": "/Game/SciFi_Beast06/Animations/Anim_SciFi_Beast06_WalkF.Anim_SciFi_Beast06_WalkF",
+    "heavy_attack_animation": "/Game/SciFi_Beast06/Animations/Anim_SciFi_Beast06_Attack1.Anim_SciFi_Beast06_Attack1",
+    "heavy_death_animation": "/Game/SciFi_Beast06/Animations/Anim_SciFi_Beast06_Death1.Anim_SciFi_Beast06_Death1"
+  },
+  "scale": 1.08,
+  "actor": "/Game/OrbitBreakout/Maps/L_EmergencyDeparture.L_EmergencyDeparture:PersistentLevel.OBEnemyCharacter_31",
+  "stable_id": "E05_EN03",
+  "encounter": 5,
+  "saved": true,
+  "scope": "Saved editor assignment; no mission progress was reset."
+}

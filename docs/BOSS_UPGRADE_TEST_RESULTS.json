@@ -1,0 +1,107 @@
+{
+  "tests": [
+    {
+      "name": "OrbitBreakout.Boss.TelegraphsSweepsJumpAndCover",
+      "state": "Success",
+      "duration": 0.04537154361605644,
+      "errors": [],
+      "warnings": [
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBBossTest_0:PersistentLevel.OBEnemyCharacter_0)",
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBBossTest_0:PersistentLevel.OBEnemyCharacter_0)",
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBBossTest_0:PersistentLevel.OBEnemyCharacter_0)"
+      ]
+    },
+    {
+      "name": "OrbitBreakout.Enemies.AwarenessAndCover",
+      "state": "Success",
+      "duration": 0.017627205699682236,
+      "errors": [],
+      "warnings": [
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_0:PersistentLevel.OBEnemyCharacter_0)",
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_0:PersistentLevel.OBEnemyCharacter_0)",
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_0:PersistentLevel.OBEnemyCharacter_0)",
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_0:PersistentLevel.OBEnemyCharacter_1)",
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_0:PersistentLevel.OBEnemyCharacter_1)",
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_0:PersistentLevel.OBEnemyCharacter_1)"
+      ]
+    },
+    {
+      "name": "OrbitBreakout.Enemies.DeathDisappears",
+      "state": "Success",
+      "duration": 0.3336286246776581,
+      "errors": [],
+      "warnings": [
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_1:PersistentLevel.OBEnemyCharacter_0)",
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_1:PersistentLevel.OBEnemyCharacter_0)",
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_1:PersistentLevel.OBEnemyCharacter_0)"
+      ]
+    },
+    {
+      "name": "OrbitBreakout.Logic.Checkpoint.ContinueEligibility",
+      "state": "Success",
+      "duration": 0.016317125409841537,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "OrbitBreakout.Logic.Checkpoint.ValidateBoundaries",
+      "state": "Success",
+      "duration": 0.016598083078861237,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "OrbitBreakout.Logic.Persistence.MemoryRoundTrip",
+      "state": "Success",
+      "duration": 0.01659499853849411,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "OrbitBreakout.Logic.Settings.ClampAndPreserve",
+      "state": "Success",
+      "duration": 0.016663290560245514,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "OrbitBreakout.Upgrade.SoloBossGate",
+      "state": "Success",
+      "duration": 0.018558375537395477,
+      "errors": [],
+      "warnings": [
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBSoloBossGateTest_0:PersistentLevel.OBEnemyCharacter_0)",
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBSoloBossGateTest_0:PersistentLevel.OBEnemyCharacter_0)",
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBSoloBossGateTest_0:PersistentLevel.OBEnemyCharacter_0)"
+      ]
+    },
+    {
+      "name": "OrbitBreakout.Weapons.HelixInventoryAndSwitch",
+      "state": "Success",
+      "duration": 0.01775583252310753,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "OrbitBreakout.Weapons.HelixMemoryPersistence",
+      "state": "Success",
+      "duration": 0.01627945899963379,
+      "errors": [],
+      "warnings": []
+    }
+  ],
+  "passed": 10,
+  "failed": 0,
+  "skipped": 0,
+  "total": 10,
+  "duration": 0.5153945684432983,
+  "scope": "Isolated transient-world or memory-only tests. No mission slot writes. Warnings are unloaded test-pawn hand sockets.",
+  "build": {
+    "actions": 33,
+    "architectures": [
+      "arm64",
+      "x64"
+    ],
+    "failed": 0
+  }
+}

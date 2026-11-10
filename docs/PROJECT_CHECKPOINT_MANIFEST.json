@@ -1,0 +1,31 @@
+{
+  "OrbitBreakout.uproject": {
+    "bytes": 734,
+    "sha256": "d8b6f4fdf3238641d5366824707c018dfe6c2bd15b24cc3b7d40b6e42c32020a"
+  },
+  "Content/OrbitBreakout/Maps/L_EmergencyDeparture.umap": {
+    "bytes": 4351781,
+    "sha256": "caa3670a078ac4797f53659305736906a7d09eede201779547797b1c85597299"
+  },
+  "Content/SciFi_Beast06/Mesh/SK_SciFi_Beast06_Skin1.uasset": {
+    "bytes": 12268419,
+    "sha256": "9d81d7de8d282eadf3773051547a787908e2105c03e640b4be99d6e05bb95995"
+  },
+  "Source/OrbitBreakout/OBEnemyCharacter.cpp": {
+    "bytes": 31293,
+    "sha256": "06d1013a26e7b09a1ebe6999df3f727d3565ee1db98ee29a2ac21e43ff74df1b"
+  },
+  "Source/OrbitBreakout/OBEnemyCharacter.h": {
+    "bytes": 9721,
+    "sha256": "f1eb38bc9e9c2fd2d35a8dcd49dd7b35e360fb29faccf0d4fe59c68cb9894c76"
+  },
+  "docs/PROJECT_CHECKPOINT.md": {
+    "bytes": 1570,
+    "sha256": "3116ef27e736ab2758bf22b05e22376c9c0d8387994afa5eaae0c6ea358fa3b7"
+  },
+  "docs/ENEMY_BEHAVIOR_TEST_RESULTS.json": {
+    "bytes": 3511,
+    "sha256": "864bb41c8fad807e12603c593704474c99af5244391ff460a568649dbdd5e183"
+  },
+  "mission_save_sha256": "3678cd66c5b999fee4ecc657904c70ee75beef899109bc2e99844a1f87db03e1"
+}

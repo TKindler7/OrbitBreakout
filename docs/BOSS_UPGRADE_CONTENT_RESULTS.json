@@ -1,0 +1,14 @@
+{
+  "checked_utc": "2026-11-06T20:55:00.719068+00:00",
+  "status": "PASS",
+  "errors": [],
+  "actor_count": 2168,
+  "enemy_count": 16,
+  "reactor_enemies": [
+    "E05_EN03"
+  ],
+  "boss_health": 2400.0,
+  "boss_mesh": "/Game/SciFi_Beast06/Mesh/SK_SciFi_Beast06_Skin1.SK_SciFi_Beast06_Skin1",
+  "pickup_location": "<Struct 'Vector' (0x7137465d20) {x: 12200.000000, y: 280.000000, z: 0.000000}>",
+  "scope": "Saved editor actor properties and pickup placement; native combat is checked separately by isolated automation. No mission save access."
+}

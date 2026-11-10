@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "before": {
+    "sha256": "d5df13b2f9e262266008124610ffe14afc959f02781e2bca898eb4000522f14d",
+    "size": 2015976
+  },
+  "after": {
+    "sha256": "d5df13b2f9e262266008124610ffe14afc959f02781e2bca898eb4000522f14d",
+    "size": 2015976
+  },
+  "actor_count": 862,
+  "navigation_paths": 22,
+  "navigation_projections": 47,
+  "notes": "Normal generator run preserved saved map bytes and validated existing structure/navigation."
+}

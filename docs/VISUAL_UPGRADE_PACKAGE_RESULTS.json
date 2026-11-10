@@ -1,0 +1,44 @@
+{
+  "scope": "Material-only repair after successful visual-upgrade gameplay checks",
+  "materials": [
+    "/Game/OrbitBreakout/Materials/M_Metal",
+    "/Game/OrbitBreakout/Materials/M_Emissive"
+  ],
+  "repair_logged": true,
+  "editor_save_sha256": "3678cd66c5b999fee4ecc657904c70ee75beef899109bc2e99844a1f87db03e1",
+  "fresh_preview_restart": "Not executed: automatic approval review rejected overwriting existing mission progress. PIE stopped and save hash unchanged.",
+  "previous_packaged_launch": {
+    "status": "PASS",
+    "at_utc": "2026-11-06T06:13:36Z",
+    "app": "Builds/VisualUpgrade/Mac/OrbitBreakout.app",
+    "main_ready": true,
+    "checkpoint_continue_observed": true,
+    "held_rifle_and_humanoid_guard_observed": true,
+    "remaining_warning_fixed": "M_Metal missing Nanite usage"
+  },
+  "final_package": {
+    "status": "PASS",
+    "app": "Builds/VisualUpgradeFinal/Mac/OrbitBreakout.app",
+    "completed_at_utc": "2026-11-06T15:00:50Z",
+    "duration_seconds": 96.06,
+    "uat_exit_code": 0,
+    "executable_sha256": "07a4ced06d4b8a156bf9064928750467300d1aa0b3ff4535c68de36c9d9f57f9",
+    "pak_files": {
+      "OrbitBreakout-Mac.utoc": 230141,
+      "OrbitBreakout-Mac.ucas": 286484752,
+      "global.ucas": 3341440,
+      "global.utoc": 806,
+      "OrbitBreakout-Mac.pak": 10875380
+    },
+    "launch": {
+      "status": "PASS",
+      "at_utc": "2026-11-06T15:01:07Z",
+      "pid": 93140,
+      "main_menu_visually_confirmed": true,
+      "ready_line": "[2026.11.06-15.01.07:848][  0]LogTemp: Display: OB_READY checkpoint=0 frontEnd=1 enemies=18 doors=7 interactions=24",
+      "material_or_fatal_errors": [],
+      "scope": "Launch/Main after material-only fix; gameplay checks apply to same native code from earlier visual build."
+    },
+    "editor_save_unchanged": true
+  }
+}

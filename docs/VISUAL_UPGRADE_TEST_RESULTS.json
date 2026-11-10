@@ -1,0 +1,55 @@
+{
+  "run": "Visual upgrade",
+  "tested_at_utc": "2026-11-06T06:04:56Z",
+  "scope": "Native logic and scripted PIE mission progression with real aim/fire input; separate visual inspection and AI observation recorded separately.",
+  "tests": [
+    {
+      "name": "OrbitBreakout.Logic.Checkpoint.ContinueEligibility",
+      "state": "Success",
+      "duration": 0.008034124970436096,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "OrbitBreakout.Logic.Checkpoint.ValidateBoundaries",
+      "state": "Success",
+      "duration": 0.006267081946134567,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "OrbitBreakout.Logic.Persistence.MemoryRoundTrip",
+      "state": "Success",
+      "duration": 0.008310001343488693,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "OrbitBreakout.Logic.Settings.ClampAndPreserve",
+      "state": "Success",
+      "duration": 0.008625291287899017,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "OrbitBreakout.Mission.PIE.ProgressionAndRecovery",
+      "state": "Success",
+      "duration": 17.10966682434082,
+      "errors": [],
+      "warnings": [
+        "LogStreaming: Failed to read file '../../../../../../teddykindler/Documents/ChatGPT/Unreal Engine Game 1/OrbitBreakout/Saved/SaveGames/OB_Settings.sav' error.",
+        "LogAudioMixerAudioUnit: Error querying Sample Rate: 2003332927",
+        "LogCrowdFollowing: Unable to find RecastNavMesh instance while trying to create UCrowdManager instance",
+        "LogCrowdFollowing: Unable to find RecastNavMesh instance while trying to create UCrowdManager instance",
+        "LogCrowdFollowing: Unable to find RecastNavMesh instance while trying to create UCrowdManager instance",
+        "LogCrowdFollowing: Unable to find RecastNavMesh instance while trying to create UCrowdManager instance",
+        "LogCrowdFollowing: Unable to find RecastNavMesh instance while trying to create UCrowdManager instance"
+      ]
+    }
+  ],
+  "passed": 5,
+  "failed": 0,
+  "skipped": 0,
+  "total": 5,
+  "duration": 17.14090347290039
+}

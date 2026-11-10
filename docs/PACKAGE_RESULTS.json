@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "platform": "Mac",
+  "configuration": "Development",
+  "architecture": "arm64 (Apple silicon)",
+  "engine": "5.8.4",
+  "completed_utc": "2026-11-06T05:32:44Z",
+  "exit_code": 0,
+  "cooked_packages": 665,
+  "app_paths": [
+    "/Users/teddykindler/Documents/ChatGPT/Unreal Engine Game 1/OrbitBreakout/Builds/FirstDraft/Mac/OrbitBreakout.app"
+  ],
+  "app_bytes": 917281937,
+  "log": "Saved/Logs/FirstDraftFinalPackaging.log",
+  "fresh_launch": "PASS",
+  "after_trigger_collision_fix": true,
+  "prior_standalone_completion": {
+    "result": "All six encounters, two checkpoints and Mission Complete observed before final trigger-collision fix",
+    "log": "Saved/Logs/FirstDraftStandalone.log",
+    "results": "Saved/Automation/PACKAGE_BEFORE_COLLISION_FIX.json"
+  },
+  "post_fix_verification": {
+    "mission": "docs/MISSION_TEST_RESULTS.json",
+    "ai_damage_navigation": "docs/AI_RUNTIME_RESULTS.json",
+    "content_navigation": "docs/CONTENT_VALIDATION.json"
+  },
+  "fresh_launch_utc": "2026-11-06T05:33:29Z",
+  "fresh_launch_scope": "Corrected app launched from Builds/FirstDraft/Mac; standalone runtime reached Main with 18 enemies, 7 doors, 24 interactions and no error/fatal/ensure log entries.",
+  "runtime_log": "Saved/Logs/FirstDraftFinalStandalone.log",
+  "completed_save_preserved_on_restart": true
+}

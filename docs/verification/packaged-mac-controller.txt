@@ -1,0 +1,6 @@
+LogCook: Display: Cooked packages 1140 Packages Remain 0 Total 1140
+LogInit: Display: Success - 0 error(s), 42 warning(s)
+BUILD SUCCESSFUL
+[2026.11.18-06.03.06:009][  0]LogAppleController: New DualSense controller inserted, assigned to playerIndex 0
+[2026.11.18-06.03.12:039][339]LogAutomationController: Display: Test Completed. Result={Success} Name={GamepadFocus} Path={OrbitBreakout.Package.GamepadFocus}
+[2026.11.18-06.03.12:039][340]LogAutomationCommandLine: Display: ...Automation Test Queue Empty 1 tests performed.

@@ -1,0 +1,664 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "Mac.router947cfa.com",
+			"instance": "D2FA1C766C4F4C4A3322909225DEFD4C",
+			"instanceName": "Mac.router947cfa.com-64365",
+			"platform": "MacEditor",
+			"oSVersion": "macOS 27.0.1 26A434",
+			"model": "Default",
+			"gPU": "Apple M5 Pro",
+			"cPUModel": "Apple M5 Pro",
+			"rAMInGB": 24,
+			"renderMode": "SM6",
+			"rHI": "Metal Bindless (SM6)",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.11.18-03.53.56",
+	"succeeded": 13,
+	"succeededWithWarnings": 5,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.65956807136535645,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "IntroLockCameraAndCleanup",
+			"fullTestPath": "OrbitBreakout.Boss.IntroLockCameraAndCleanup",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"D2FA1C766C4F4C4A3322909225DEFD4C"
+			],
+			"duration": 0.035880498588085175,
+			"dateTime": "2026.11.18-03.53.55",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBBossIntroTest_0:PersistentLevel.OBEnemyCharacter_0)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.18-03.53.55"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBBossIntroTest_0:PersistentLevel.OBEnemyCharacter_0)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.18-03.53.55"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBBossIntroTest_0:PersistentLevel.OBEnemyCharacter_0)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.18-03.53.55"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBBossIntroTest_0:PersistentLevel.OBEnemyCharacter_1)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.18-03.53.55"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBBossIntroTest_0:PersistentLevel.OBEnemyCharacter_1)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.18-03.53.55"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBBossIntroTest_0:PersistentLevel.OBEnemyCharacter_1)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.18-03.53.55"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBBossIntroTest_0:PersistentLevel.OBEnemyCharacter_2)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.18-03.53.55"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBBossIntroTest_0:PersistentLevel.OBEnemyCharacter_2)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.18-03.53.55"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBBossIntroTest_0:PersistentLevel.OBEnemyCharacter_2)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.18-03.53.55"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBBossIntroTest_0:PersistentLevel.OBEnemyCharacter_3)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.18-03.53.55"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBBossIntroTest_0:PersistentLevel.OBEnemyCharacter_3)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.18-03.53.55"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBBossIntroTest_0:PersistentLevel.OBEnemyCharacter_3)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.18-03.53.55"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBBossIntroTest_0:PersistentLevel.OBEnemyCharacter_4)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.18-03.53.55"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBBossIntroTest_0:PersistentLevel.OBEnemyCharacter_4)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.18-03.53.55"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBBossIntroTest_0:PersistentLevel.OBEnemyCharacter_4)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.18-03.53.55"
+				}
+			],
+			"warnings": 15,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "TelegraphsSweepsJumpAndCover",
+			"fullTestPath": "OrbitBreakout.Boss.TelegraphsSweepsJumpAndCover",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"D2FA1C766C4F4C4A3322909225DEFD4C"
+			],
+			"duration": 0.017961915582418442,
+			"dateTime": "2026.11.18-03.53.55",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBBossTest_0:PersistentLevel.OBEnemyCharacter_0)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.18-03.53.55"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBBossTest_0:PersistentLevel.OBEnemyCharacter_0)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.18-03.53.55"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBBossTest_0:PersistentLevel.OBEnemyCharacter_0)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.18-03.53.55"
+				}
+			],
+			"warnings": 3,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "AwarenessAndCover",
+			"fullTestPath": "OrbitBreakout.Enemies.AwarenessAndCover",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"D2FA1C766C4F4C4A3322909225DEFD4C"
+			],
+			"duration": 0.016092248260974884,
+			"dateTime": "2026.11.18-03.53.55",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_0:PersistentLevel.OBEnemyCharacter_0)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.18-03.53.55"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_0:PersistentLevel.OBEnemyCharacter_0)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.18-03.53.55"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_0:PersistentLevel.OBEnemyCharacter_0)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.18-03.53.55"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_0:PersistentLevel.OBEnemyCharacter_1)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.18-03.53.55"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_0:PersistentLevel.OBEnemyCharacter_1)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.18-03.53.55"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_0:PersistentLevel.OBEnemyCharacter_1)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.18-03.53.55"
+				}
+			],
+			"warnings": 6,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "DeathDisappears",
+			"fullTestPath": "OrbitBreakout.Enemies.DeathDisappears",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"D2FA1C766C4F4C4A3322909225DEFD4C"
+			],
+			"duration": 0.34086775779724121,
+			"dateTime": "2026.11.18-03.53.55",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_1:PersistentLevel.OBEnemyCharacter_0)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.18-03.53.55"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_1:PersistentLevel.OBEnemyCharacter_0)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.18-03.53.55"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_1:PersistentLevel.OBEnemyCharacter_0)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.18-03.53.55"
+				}
+			],
+			"warnings": 3,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "ShieldsAndCleanup",
+			"fullTestPath": "OrbitBreakout.Level2.Machines.ShieldsAndCleanup",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"D2FA1C766C4F4C4A3322909225DEFD4C"
+			],
+			"duration": 0.017896376550197601,
+			"dateTime": "2026.11.18-03.53.56",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "FiniteWavesRecoveryAndHazards",
+			"fullTestPath": "OrbitBreakout.Level2.Mission.FiniteWavesRecoveryAndHazards",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"D2FA1C766C4F4C4A3322909225DEFD4C"
+			],
+			"duration": 0.028719794005155563,
+			"dateTime": "2026.11.18-03.53.56",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "ChapterAndLoadoutRoundTrip",
+			"fullTestPath": "OrbitBreakout.Level2.Save.ChapterAndLoadoutRoundTrip",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"D2FA1C766C4F4C4A3322909225DEFD4C"
+			],
+			"duration": 0.01670808345079422,
+			"dateTime": "2026.11.18-03.53.56",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "LegacyMigration",
+			"fullTestPath": "OrbitBreakout.Level2.Save.LegacyMigration",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"D2FA1C766C4F4C4A3322909225DEFD4C"
+			],
+			"duration": 0.016729459166526794,
+			"dateTime": "2026.11.18-03.53.56",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "ExactCampaignLoadout",
+			"fullTestPath": "OrbitBreakout.Level2.ExactCampaignLoadout",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"D2FA1C766C4F4C4A3322909225DEFD4C"
+			],
+			"duration": 0.017401460558176041,
+			"dateTime": "2026.11.18-03.53.56",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "ContinueEligibility",
+			"fullTestPath": "OrbitBreakout.Logic.Checkpoint.ContinueEligibility",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"D2FA1C766C4F4C4A3322909225DEFD4C"
+			],
+			"duration": 0.016612377017736435,
+			"dateTime": "2026.11.18-03.53.56",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "ValidateBoundaries",
+			"fullTestPath": "OrbitBreakout.Logic.Checkpoint.ValidateBoundaries",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"D2FA1C766C4F4C4A3322909225DEFD4C"
+			],
+			"duration": 0.016347125172615051,
+			"dateTime": "2026.11.18-03.53.56",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "MemoryRoundTrip",
+			"fullTestPath": "OrbitBreakout.Logic.Persistence.MemoryRoundTrip",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"D2FA1C766C4F4C4A3322909225DEFD4C"
+			],
+			"duration": 0.01658962294459343,
+			"dateTime": "2026.11.18-03.53.56",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "ClampAndPreserve",
+			"fullTestPath": "OrbitBreakout.Logic.Settings.ClampAndPreserve",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"D2FA1C766C4F4C4A3322909225DEFD4C"
+			],
+			"duration": 0.016367040574550629,
+			"dateTime": "2026.11.18-03.53.56",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "CollisionCameraAndPossession",
+			"fullTestPath": "OrbitBreakout.Pilot.CollisionCameraAndPossession",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"D2FA1C766C4F4C4A3322909225DEFD4C"
+			],
+			"duration": 0.017757125198841095,
+			"dateTime": "2026.11.18-03.53.56",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "WraithMovingRecoilAndTrooperSkeleton",
+			"fullTestPath": "OrbitBreakout.Presentation.WraithMovingRecoilAndTrooperSkeleton",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"D2FA1C766C4F4C4A3322909225DEFD4C"
+			],
+			"duration": 0.0172467902302742,
+			"dateTime": "2026.11.18-03.53.56",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "SoloBossGate",
+			"fullTestPath": "OrbitBreakout.Upgrade.SoloBossGate",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"D2FA1C766C4F4C4A3322909225DEFD4C"
+			],
+			"duration": 0.017431166023015976,
+			"dateTime": "2026.11.18-03.53.56",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBSoloBossGateTest_0:PersistentLevel.OBEnemyCharacter_0)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.18-03.53.56"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBSoloBossGateTest_0:PersistentLevel.OBEnemyCharacter_0)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.18-03.53.56"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBSoloBossGateTest_0:PersistentLevel.OBEnemyCharacter_0)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.18-03.53.56"
+				}
+			],
+			"warnings": 3,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "HelixInventoryAndSwitch",
+			"fullTestPath": "OrbitBreakout.Weapons.HelixInventoryAndSwitch",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"D2FA1C766C4F4C4A3322909225DEFD4C"
+			],
+			"duration": 0.016751207411289215,
+			"dateTime": "2026.11.18-03.53.56",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "HelixMemoryPersistence",
+			"fullTestPath": "OrbitBreakout.Weapons.HelixMemoryPersistence",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"D2FA1C766C4F4C4A3322909225DEFD4C"
+			],
+			"duration": 0.016208082437515259,
+			"dateTime": "2026.11.18-03.53.56",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

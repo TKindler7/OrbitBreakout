@@ -24,7 +24,8 @@ public:
     UFUNCTION(BlueprintCallable) void ShowScreen(FName Screen);
     UFUNCTION(BlueprintCallable) void HideScreen();
     UFUNCTION(BlueprintPure) bool IsMenuOpen() const { return !MenuScreen.IsNone(); }
-    bool IsInteractPhysicallyHeld() const { return bPhysicalInteractHeld; }
+    bool IsInteractPhysicallyHeld() const { return bPhysicalInteractHeld || bGamepadInteractHeld; }
+    bool IsUsingGamepad() const { return bUsingGamepad; }
     UFUNCTION(BlueprintPure) AOBMissionDirector* GetMissionDirector();
     UFUNCTION(BlueprintPure) UOBGameInstance* GetOBGameInstance() const;
     UFUNCTION(BlueprintCallable) void PerformAction(FName Action);
@@ -40,6 +41,8 @@ private:
     TWeakObjectPtr<AOBMissionDirector> CachedDirector;
     bool bBlockFireUntilRelease = false;
     bool bPhysicalInteractHeld = false;
+    bool bGamepadInteractHeld = false;
+    bool bUsingGamepad = false;
     void RequestConfirmation(FName Action, const FString& Text);
     void QuitToDesktop();
 };

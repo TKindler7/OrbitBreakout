@@ -1,0 +1,47 @@
+{
+  "stick_down_default": {
+    "pass": true,
+    "observed": "-53.7694787979126"
+  },
+  "stick_down_inverted": {
+    "pass": true,
+    "observed": "51.58346223831177"
+  },
+  "L3_sprint": {
+    "pass": true,
+    "observed": "650.0000000000001"
+  },
+  "R3_slide": {
+    "pass": true,
+    "observed": "['<OBTraversal.FREE: 0>', '<OBTraversal.SLIDE: 1>', '<OBTraversal.SLIDE: 1>', '<OBTraversal.SLIDE: 1>', '<OBTraversal.SLIDE: 1>', '<OBTraversal.SLIDE: 1>', '<OBTraversal.SLIDE: 1>', '<OBTraversal.SLIDE: 1>']"
+  },
+  "L2_aim": {
+    "pass": true,
+    "observed": "68.0"
+  },
+  "R2_fires": {
+    "pass": true,
+    "observed": "(24, 22)"
+  },
+  "Options_pauses": {
+    "pass": true,
+    "observed": "Pause"
+  },
+  "Dpad_Cross_focus": {
+    "pass": true,
+    "observed": "Settings"
+  },
+  "release_aim_during_pause": {
+    "pass": true,
+    "observed": "False"
+  },
+  "Square_starts_reload": {
+    "pass": true,
+    "observed": "True"
+  },
+  "reload_completes": {
+    "pass": true,
+    "observed": "24"
+  },
+  "status": "PASS"
+}

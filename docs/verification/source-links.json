@@ -1,0 +1,7 @@
+{
+  "SM_LoaderHull": "ArtSource/Loader/Geometry/SM_LoaderHull.fbx",
+  "SM_LoaderCockpit": "ArtSource/Loader/Geometry/SM_LoaderCockpit.fbx",
+  "SM_LoaderThigh": "ArtSource/Loader/Geometry/SM_LoaderThigh.fbx",
+  "SM_LoaderShin": "ArtSource/Loader/Geometry/SM_LoaderShin.fbx",
+  "SM_LoaderFoot": "ArtSource/Loader/Geometry/SM_LoaderFoot.fbx"
+}

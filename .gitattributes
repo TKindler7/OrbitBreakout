@@ -1,0 +1,7 @@
+Content/UndergroundTunnel/**/*.uasset filter=lfs diff=lfs merge=lfs -text
+Content/UndergroundTunnel/**/*.umap filter=lfs diff=lfs merge=lfs -text
+Content/ParagonWraith/**/*.uasset filter=lfs diff=lfs merge=lfs -text
+Content/ParagonWraith/**/*.umap filter=lfs diff=lfs merge=lfs -text
+Content/SciFITrooper_Man_03/**/*.uasset filter=lfs diff=lfs merge=lfs -text
+Content/StarSparrow/**/*.uasset filter=lfs diff=lfs merge=lfs -text
+Releases/*.zip filter=lfs diff=lfs merge=lfs -text

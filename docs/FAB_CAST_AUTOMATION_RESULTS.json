@@ -1,0 +1,67 @@
+{
+  "tests": [
+    {
+      "name": "OrbitBreakout.Enemies.AwarenessAndCover",
+      "state": "Success",
+      "duration": 0.0343630388379097,
+      "errors": [],
+      "warnings": [
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_0:PersistentLevel.OBEnemyCharacter_0)",
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_0:PersistentLevel.OBEnemyCharacter_0)",
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_0:PersistentLevel.OBEnemyCharacter_0)",
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_0:PersistentLevel.OBEnemyCharacter_1)",
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_0:PersistentLevel.OBEnemyCharacter_1)",
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_0:PersistentLevel.OBEnemyCharacter_1)"
+      ]
+    },
+    {
+      "name": "OrbitBreakout.Enemies.DeathDisappears",
+      "state": "Success",
+      "duration": 0.3257676959037781,
+      "errors": [],
+      "warnings": [
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_1:PersistentLevel.OBEnemyCharacter_0)",
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_1:PersistentLevel.OBEnemyCharacter_0)",
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBEnemyBehaviorTest_1:PersistentLevel.OBEnemyCharacter_0)"
+      ]
+    },
+    {
+      "name": "OrbitBreakout.Presentation.WraithMovingRecoilAndTrooperSkeleton",
+      "state": "Success",
+      "duration": 0.018215127289295197,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "OrbitBreakout.Weapons.HelixInventoryAndSwitch",
+      "state": "Success",
+      "duration": 0.018258456140756607,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "OrbitBreakout.Weapons.HelixMemoryPersistence",
+      "state": "Success",
+      "duration": 0.016046084463596344,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "OrbitBreakout.Boss.TelegraphsSweepsJumpAndCover",
+      "state": "Success",
+      "duration": 0.01991066336631775,
+      "errors": [],
+      "warnings": [
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBBossTest_0:PersistentLevel.OBEnemyCharacter_0)",
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBBossTest_0:PersistentLevel.OBEnemyCharacter_0)",
+        "LogSkinnedMeshComp: GetSocketInfoByName(hand_r): No SkeletalMesh for Component(CharacterMesh0) Actor(OBEnemyCharacter /Engine/Transient.OBBossTest_0:PersistentLevel.OBEnemyCharacter_0)"
+      ]
+    }
+  ],
+  "passed": 6,
+  "failed": 0,
+  "skipped": 0,
+  "total": 6,
+  "duration": 0.43256106600165367,
+  "excluded_test_note": "OrbitBreakout.Boss.IntroLockCameraAndCleanup crashed in recursive SetViewTarget/ClientSetViewTarget calls in its isolated camera fixture; not counted as a passing test."
+}

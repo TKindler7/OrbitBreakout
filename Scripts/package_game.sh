@@ -1,5 +1,5 @@
 #!/bin/bash
-# Unverified stock RunUAT packaging wrapper; use --dry-run to inspect.
+# Package the current Mac build with the installed Unreal Automation Tool.
 set -euo pipefail
 OB_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$OB_SCRIPT_DIR/BuildSupport/workflow_common.sh"
@@ -9,8 +9,6 @@ usage() {
 Usage: package_game.sh [--engine PATH] [--project FILE]
                        [--configuration Development|Shipping] [--output PATH] [--dry-run]
 
-UNVERIFIED workflow wrapper: syntax and command construction have been checked;
-no packaged application has been produced or validated through this wrapper.
 Runs the installed engine's stock RunUAT.sh BuildCookRun for macOS.
 
   --engine PATH         Unreal installation root or Engine directory; otherwise
@@ -21,8 +19,8 @@ Runs the installed engine's stock RunUAT.sh BuildCookRun for macOS.
   --dry-run             Print the quoted command without running UAT or writing files.
   --help                Show this help.
 
-Generate and validate the mission first. This builds, cooks, stages and archives
-the game; installing Xcode and compiling the editor alone does not verify packaging.
+This builds and cooks the game, stages its content, packages the self-contained
+application, and archives it to the output directory.
 Stock UAT manages its own build and logging paths and needs normal write access.
 HELP
 }
@@ -54,5 +52,5 @@ print(Path(sys.argv[1]).expanduser().resolve())
 PY
 )"
 ob_run_command /bin/bash "$OB_UAT" BuildCookRun "-project=$OB_PROJECT" -noP4 \
-    -platform=Mac "-clientconfig=$OB_CONFIGURATION" -build -cook -stage -pak -archive \
+    -platform=Mac "-clientconfig=$OB_CONFIGURATION" -build -cook -stage -pak -package -archive \
     "-archivedirectory=$OB_OUTPUT" -utf8output

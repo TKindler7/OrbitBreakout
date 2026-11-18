@@ -91,7 +91,7 @@ bool FOBSaveValidationTest::RunTest(const FString& Parameters)
         {
             for (const bool bCompleted : {false, true})
             {
-                Save->CheckpointId = Checkpoint;
+                Save->SetCheckpointIdentity(Checkpoint);
                 Save->ReserveAmmo = Reserve;
                 Save->bMissionCompleted = bCompleted;
                 TestTrue(FString::Printf(TEXT("CP%02d reserve %d completed %d is loadable"),
@@ -99,10 +99,10 @@ bool FOBSaveValidationTest::RunTest(const FString& Parameters)
             }
         }
     }
-    Save->CheckpointId = 1;
+    Save->SetCheckpointIdentity(1);
     Save->ReserveAmmo = 96;
     Save->bMissionCompleted = false;
-    for (const int32 Schema : {-1, 0, 2, MAX_int32})
+    for (const int32 Schema : {-1, 0, 3, MAX_int32})
     {
         Save->SchemaVersion = Schema;
         TestFalse(FString::Printf(TEXT("Unsupported schema %d cannot Continue"), Schema), Save->IsValidSave());
@@ -146,7 +146,7 @@ bool FOBContinueEligibilityTest::RunTest(const FString& Parameters)
     TestTrue(TEXT("Validated in-memory CP00 is available for recovery"), Session->HasValidSave());
     Session->MissionSave->CheckpointId = 99;
     TestFalse(TEXT("Invalid snapshot is rejected even with a stale validity flag"), Session->HasValidSave());
-    Session->MissionSave->CheckpointId = 2;
+    Session->MissionSave->SetCheckpointIdentity(2);
     Session->MissionSave->bMissionCompleted = true;
     TestTrue(TEXT("Completed snapshot remains valid for Replay presentation"), Session->HasValidSave());
     return true;
@@ -158,7 +158,7 @@ IMPLEMENT_SIMPLE_AUTOMATION_TEST(FOBSaveRoundTripTest,
 bool FOBSaveRoundTripTest::RunTest(const FString& Parameters)
 {
     UOBMissionSave* Mission = NewObject<UOBMissionSave>();
-    Mission->CheckpointId = 2;
+    Mission->SetCheckpointIdentity(2);
     Mission->ReserveAmmo = 127;
     Mission->bMissionCompleted = true;
     TArray<uint8> MissionBytes;

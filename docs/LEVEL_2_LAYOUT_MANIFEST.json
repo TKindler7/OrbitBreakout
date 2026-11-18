@@ -1,0 +1,730 @@
+{
+  "map": "/Game/OrbitBreakout/Maps/L_DeadSignal",
+  "tag": "OB_L2_GENERATED",
+  "checkpoints": {
+    "Crash": [
+      0,
+      0,
+      110
+    ],
+    "Junction": [
+      6500,
+      3500,
+      110
+    ],
+    "Power": [
+      13000,
+      7000,
+      110
+    ],
+    "Finale": [
+      18900,
+      9500,
+      110
+    ]
+  },
+  "interactions": [
+    {
+      "id": "L2_CrashSupplies",
+      "action": "SUPPLY",
+      "zone": 1,
+      "position": [
+        600,
+        -650,
+        55
+      ],
+      "hold_seconds": 0
+    },
+    {
+      "id": "L2_CrashMedical",
+      "action": "MEDICAL",
+      "zone": 1,
+      "position": [
+        820,
+        -650,
+        55
+      ],
+      "hold_seconds": 0
+    },
+    {
+      "id": "L2_CrashLog",
+      "action": "LOG",
+      "zone": 1,
+      "position": [
+        650,
+        650,
+        55
+      ],
+      "hold_seconds": 0
+    },
+    {
+      "id": "L2_CableBreaker",
+      "action": "BREAKER",
+      "zone": 3,
+      "position": [
+        5400,
+        2470,
+        55
+      ],
+      "hold_seconds": 2
+    },
+    {
+      "id": "L2_DrainPump",
+      "action": "PUMP",
+      "zone": 3,
+      "position": [
+        7840,
+        3530,
+        55
+      ],
+      "hold_seconds": 2
+    },
+    {
+      "id": "L2_FreightAlcoveSupplies",
+      "action": "SUPPLY",
+      "zone": 4,
+      "position": [
+        10950,
+        4000,
+        170
+      ],
+      "hold_seconds": 0
+    },
+    {
+      "id": "L2_FreightMedical",
+      "action": "MEDICAL",
+      "zone": 4,
+      "position": [
+        9400,
+        2010,
+        55
+      ],
+      "hold_seconds": 0
+    },
+    {
+      "id": "L2_CouplerCabinet",
+      "action": "COUPLER",
+      "zone": 5,
+      "position": [
+        12000,
+        7600,
+        55
+      ],
+      "hold_seconds": 0
+    },
+    {
+      "id": "L2_CouplerSocket",
+      "action": "SOCKET",
+      "zone": 5,
+      "position": [
+        13500,
+        7560,
+        55
+      ],
+      "hold_seconds": 1
+    },
+    {
+      "id": "L2_AuxRestart",
+      "action": "POWER",
+      "zone": 5,
+      "position": [
+        13900,
+        7560,
+        55
+      ],
+      "hold_seconds": 3
+    },
+    {
+      "id": "L2_PowerSupplies",
+      "action": "SUPPLY",
+      "zone": 5,
+      "position": [
+        13900,
+        6430,
+        55
+      ],
+      "hold_seconds": 0
+    },
+    {
+      "id": "L2_WardenMedical",
+      "action": "MEDICAL",
+      "zone": 6,
+      "position": [
+        16650,
+        6400,
+        55
+      ],
+      "hold_seconds": 0
+    },
+    {
+      "id": "L2_StabilizerA",
+      "action": "STABILIZER_A",
+      "zone": 7,
+      "position": [
+        19900,
+        8700,
+        55
+      ],
+      "hold_seconds": 1.5
+    },
+    {
+      "id": "L2_StabilizerB",
+      "action": "STABILIZER_B",
+      "zone": 7,
+      "position": [
+        19900,
+        10300,
+        55
+      ],
+      "hold_seconds": 1.5
+    },
+    {
+      "id": "L2_Transmitter",
+      "action": "TRANSMITTER",
+      "zone": 7,
+      "position": [
+        21300,
+        9500,
+        110
+      ],
+      "hold_seconds": 2
+    },
+    {
+      "id": "L2_FinaleAmmo",
+      "action": "SUPPLY",
+      "zone": 7,
+      "position": [
+        21500,
+        10500,
+        55
+      ],
+      "hold_seconds": 0
+    },
+    {
+      "id": "L2_FinaleMedical",
+      "action": "MEDICAL",
+      "zone": 7,
+      "position": [
+        21500,
+        8500,
+        55
+      ],
+      "hold_seconds": 0
+    }
+  ],
+  "machines": [
+    {
+      "id": "L2_E201_01",
+      "kind": "CUTTER",
+      "encounter": 201,
+      "position": [
+        2600,
+        100,
+        110
+      ]
+    },
+    {
+      "id": "L2_E201_02",
+      "kind": "CUTTER",
+      "encounter": 201,
+      "position": [
+        3200,
+        -150,
+        110
+      ]
+    },
+    {
+      "id": "L2_E202_01",
+      "kind": "WATCHER",
+      "encounter": 202,
+      "position": [
+        5000,
+        900,
+        110
+      ]
+    },
+    {
+      "id": "L2_E202_02",
+      "kind": "WATCHER",
+      "encounter": 202,
+      "position": [
+        5300,
+        1850,
+        110
+      ]
+    },
+    {
+      "id": "L2_E203_01",
+      "kind": "WATCHER",
+      "encounter": 203,
+      "position": [
+        7580,
+        3450,
+        110
+      ]
+    },
+    {
+      "id": "L2_E203_02",
+      "kind": "CUTTER",
+      "encounter": 203,
+      "position": [
+        6500,
+        3490,
+        110
+      ]
+    },
+    {
+      "id": "L2_E203_03",
+      "kind": "CUTTER",
+      "encounter": 203,
+      "position": [
+        7200,
+        2460,
+        110
+      ]
+    },
+    {
+      "id": "L2_E204_01",
+      "kind": "WATCHER",
+      "encounter": 204,
+      "position": [
+        9500,
+        3350,
+        110
+      ]
+    },
+    {
+      "id": "L2_E204_02",
+      "kind": "WATCHER",
+      "encounter": 204,
+      "position": [
+        10400,
+        2440,
+        110
+      ]
+    },
+    {
+      "id": "L2_E204_03",
+      "kind": "WATCHER",
+      "encounter": 204,
+      "position": [
+        11100,
+        3100,
+        110
+      ]
+    },
+    {
+      "id": "L2_E204_04",
+      "kind": "CUTTER",
+      "encounter": 204,
+      "position": [
+        9650,
+        2750,
+        110
+      ]
+    },
+    {
+      "id": "L2_E204_05",
+      "kind": "CUTTER",
+      "encounter": 204,
+      "position": [
+        10750,
+        3650,
+        110
+      ]
+    },
+    {
+      "id": "L2_E205_01",
+      "kind": "BULWARK",
+      "encounter": 205,
+      "position": [
+        12500,
+        3950,
+        110
+      ]
+    },
+    {
+      "id": "L2_E206_01",
+      "kind": "CUTTER",
+      "encounter": 206,
+      "position": [
+        12450,
+        6550,
+        110
+      ]
+    },
+    {
+      "id": "L2_E206_02",
+      "kind": "WATCHER",
+      "encounter": 206,
+      "position": [
+        13100,
+        7380,
+        110
+      ]
+    },
+    {
+      "id": "L2_E206_03",
+      "kind": "WATCHER",
+      "encounter": 206,
+      "position": [
+        13750,
+        6720,
+        110
+      ]
+    },
+    {
+      "id": "L2_E207_01",
+      "kind": "WARDEN",
+      "encounter": 207,
+      "position": [
+        17700,
+        7250,
+        125
+      ]
+    },
+    {
+      "id": "L2_E210_01",
+      "kind": "WATCHER",
+      "encounter": 210,
+      "position": [
+        20650,
+        11720,
+        125
+      ]
+    },
+    {
+      "id": "L2_E210_02",
+      "kind": "CUTTER",
+      "encounter": 210,
+      "position": [
+        20560,
+        7360,
+        125
+      ]
+    },
+    {
+      "id": "L2_E210_03",
+      "kind": "WATCHER",
+      "encounter": 210,
+      "position": [
+        20300,
+        7240,
+        125
+      ]
+    },
+    {
+      "id": "L2_E210_04",
+      "kind": "CUTTER",
+      "encounter": 210,
+      "position": [
+        22750,
+        9300,
+        125
+      ]
+    },
+    {
+      "id": "L2_E211_01",
+      "kind": "WATCHER",
+      "encounter": 211,
+      "position": [
+        20560,
+        7360,
+        125
+      ]
+    },
+    {
+      "id": "L2_E211_02",
+      "kind": "CUTTER",
+      "encounter": 211,
+      "position": [
+        20300,
+        7240,
+        125
+      ]
+    },
+    {
+      "id": "L2_E211_03",
+      "kind": "WATCHER",
+      "encounter": 211,
+      "position": [
+        22750,
+        9300,
+        125
+      ]
+    },
+    {
+      "id": "L2_E211_04",
+      "kind": "CUTTER",
+      "encounter": 211,
+      "position": [
+        20650,
+        11720,
+        125
+      ]
+    },
+    {
+      "id": "L2_E212_01",
+      "kind": "BULWARK",
+      "encounter": 212,
+      "position": [
+        20300,
+        7240,
+        125
+      ]
+    },
+    {
+      "id": "L2_E212_02",
+      "kind": "CUTTER",
+      "encounter": 212,
+      "position": [
+        22750,
+        9300,
+        125
+      ]
+    },
+    {
+      "id": "L2_E212_03",
+      "kind": "CUTTER",
+      "encounter": 212,
+      "position": [
+        20650,
+        11720,
+        125
+      ]
+    },
+    {
+      "id": "L2_E213_01",
+      "kind": "WATCHER",
+      "encounter": 213,
+      "position": [
+        22750,
+        9300,
+        125
+      ]
+    },
+    {
+      "id": "L2_E213_02",
+      "kind": "WATCHER",
+      "encounter": 213,
+      "position": [
+        20650,
+        11720,
+        125
+      ]
+    }
+  ],
+  "anchors": [
+    [
+      "T01_CrashChamber",
+      [
+        -100,
+        0,
+        110
+      ]
+    ],
+    [
+      "T01_FreightPortal_start",
+      [
+        -3000,
+        0,
+        110
+      ]
+    ],
+    [
+      "T01_FreightPortal_end",
+      [
+        -1500,
+        0,
+        110
+      ]
+    ],
+    [
+      "T02_MaintenanceSpine_start",
+      [
+        1300,
+        0,
+        110
+      ]
+    ],
+    [
+      "T02_MaintenanceSpine_end",
+      [
+        4400,
+        0,
+        110
+      ]
+    ],
+    [
+      "T02_ServiceBend",
+      [
+        5000,
+        0,
+        110
+      ]
+    ],
+    [
+      "T02_ServicePassage_start",
+      [
+        5000,
+        800,
+        110
+      ]
+    ],
+    [
+      "T02_ServicePassage_end",
+      [
+        5000,
+        2400,
+        110
+      ]
+    ],
+    [
+      "T03_PumpJunction",
+      [
+        6500,
+        3000,
+        110
+      ]
+    ],
+    [
+      "T04_FreightGallery_start",
+      [
+        8600,
+        3000,
+        110
+      ]
+    ],
+    [
+      "T04_FreightGallery_end",
+      [
+        11600,
+        3000,
+        110
+      ]
+    ],
+    [
+      "T04_TransferBend",
+      [
+        12200,
+        3000,
+        110
+      ]
+    ],
+    [
+      "T04_FreightRise_start",
+      [
+        12200,
+        4200,
+        110
+      ]
+    ],
+    [
+      "T04_FreightRise_end",
+      [
+        12200,
+        6000,
+        110
+      ]
+    ],
+    [
+      "T05_AuxiliaryPower",
+      [
+        13000,
+        7000,
+        110
+      ]
+    ],
+    [
+      "T06_PressureLine_start",
+      [
+        14400,
+        7000,
+        110
+      ]
+    ],
+    [
+      "T06_PressureLine_end",
+      [
+        16400,
+        7000,
+        110
+      ]
+    ],
+    [
+      "T06_WardenAntechamber",
+      [
+        17400,
+        7000,
+        110
+      ]
+    ],
+    [
+      "T06_AntennaApproach_start",
+      [
+        17400,
+        8200,
+        110
+      ]
+    ],
+    [
+      "T06_AntennaApproach_end",
+      [
+        17400,
+        9500,
+        110
+      ]
+    ],
+    [
+      "T07_EntryTurn",
+      [
+        18000,
+        9500,
+        110
+      ]
+    ],
+    [
+      "T07_SignalChamber",
+      [
+        20500,
+        9500,
+        110
+      ]
+    ],
+    [
+      "T07_EntryDoor1",
+      [
+        20500,
+        7300,
+        110
+      ]
+    ],
+    [
+      "T07_EntryDoor2",
+      [
+        22700,
+        9500,
+        110
+      ]
+    ],
+    [
+      "T07_EntryDoor3",
+      [
+        20500,
+        11700,
+        110
+      ]
+    ]
+  ],
+  "doors": [
+    203,
+    204,
+    206,
+    207
+  ],
+  "finale_roster_count": 13,
+  "sequence_paths": [
+    "/Game/OrbitBreakout/Level2/Cinematics/LS_DeadSignal_Crash.LS_DeadSignal_Crash",
+    "/Game/OrbitBreakout/Level2/Cinematics/LS_DeadSignal_Rescue.LS_DeadSignal_Rescue"
+  ]
+}

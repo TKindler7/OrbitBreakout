@@ -67,7 +67,8 @@ bool FOBBossIntroTest::RunTest(const FString& Parameters)
     if(!TestNotNull(TEXT("Isolated entrance world exists"),Fixture.World))return false;
     AOBMissionDirector* Director=Fixture.World->SpawnActor<AOBMissionDirector>();
     AOBPlayerCharacter* Player=Fixture.Pawn<AOBPlayerCharacter>(FVector(-700,0,96));
-    AOBPlayerController* PC=Fixture.World->SpawnActor<AOBPlayerController>();
+    AOBPlayerController* PC=Fixture.World->SpawnActorDeferred<AOBPlayerController>(AOBPlayerController::StaticClass(),FTransform::Identity);
+    if (PC) { PC->SetAsLocalPlayerController(); PC->FinishSpawning(FTransform::Identity); }
     AOBEnemyCharacter* Boss=Fixture.Pawn<AOBEnemyCharacter>(FVector(0,0,112),true);
     if(!TestNotNull(TEXT("Director exists"),Director)||!TestNotNull(TEXT("Player exists"),Player)||
        !TestNotNull(TEXT("Controller exists"),PC)||!TestNotNull(TEXT("Boss exists"),Boss))return false;
@@ -76,6 +77,8 @@ bool FOBBossIntroTest::RunTest(const FString& Parameters)
     Player->EndSpawnGrace();Player->GetCharacterMovement()->SetMovementMode(MOVE_Walking);
     PC->Possess(Player);PC->SetViewTarget(Player);
     if(!TestNotNull(TEXT("Controller has a camera manager"),PC->PlayerCameraManager.Get()))return false;
+    // The isolated controller has no viewport client to drive the camera update.
+    PC->PlayerCameraManager->bUseClientSideCameraUpdates=false;
     Boss->Director=Director;Boss->Target=Player;Boss->Health=Boss->SentinelHealth;Boss->EncounterId=5;Boss->StableId=TEXT("TEST_INTRO_BULL");
     Boss->HeavySkeletalMesh=LoadObject<USkeletalMesh>(nullptr,TEXT("/Game/SciFi_Beast06/Mesh/SK_SciFi_Beast06_Skin1.SK_SciFi_Beast06_Skin1"));
     Boss->HeavyIntroAnimation=LoadObject<UAnimSequence>(nullptr,TEXT("/Game/SciFi_Beast06/Animations/Anim_SciFi_Beast06_Rage.Anim_SciFi_Beast06_Rage"));

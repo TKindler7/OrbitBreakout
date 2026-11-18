@@ -1,4 +1,5 @@
 #include "OBEnemyProjectile.h"
+#include "OBMech.h"
 #include "OBPlayerCharacter.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
@@ -80,9 +81,9 @@ void AOBEnemyProjectile::OnBoltHit(UPrimitiveComponent* HitComponent, AActor* Ot
     bSpent = true;
     Collision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     Movement->StopMovementImmediately();
-    if (AOBPlayerCharacter* Player = Cast<AOBPlayerCharacter>(OtherActor))
+    if (Cast<AOBPlayerCharacter>(OtherActor) || Cast<AOBMech>(OtherActor))
     {
-        UGameplayStatics::ApplyPointDamage(Player, DamageAmount, GetActorForwardVector(), Hit,
+        UGameplayStatics::ApplyPointDamage(OtherActor, DamageAmount, GetActorForwardVector(), Hit,
             ShotController.Get(), this, nullptr);
     }
     // World geometry and other blocking objects absorb the bolt without a damage event.

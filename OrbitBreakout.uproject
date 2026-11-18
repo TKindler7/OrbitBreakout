@@ -36,6 +36,13 @@
       "TargetAllowList": [
         "Editor"
       ]
+    },
+    {
+      "Name": "SequencerScripting",
+      "Enabled": true,
+      "TargetAllowList": [
+        "Editor"
+      ]
     }
   ]
 }

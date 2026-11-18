@@ -1,4 +1,5 @@
 #include "OBEnemyCharacter.h"
+#include "OBParkourMovement.h"
 #include "OBEnemyProjectile.h"
 #include "OBPlayerCharacter.h"
 #include "OBRifleAnimInstance.h"
@@ -53,7 +54,7 @@ AOBEnemyCharacter::AOBEnemyCharacter()
     BodyPivot->SetupAttachment(GetCapsuleComponent());
     // Keep the old subobject names loadable for existing maps, but replace the
     // block-model body with the same authored skeletal body used by the player.
-    static ConstructorHelpers::FObjectFinder<USkeletalMesh> Manny(TEXT("/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"));
+    static ConstructorHelpers::FObjectFinder<USkeletalMesh> Manny(TEXT("/Game/SciFITrooper_Man_03/SkeletalMesh/SK_SciFITrooper_Man_03.SK_SciFITrooper_Man_03"));
     if (Manny.Succeeded()) TrooperSkeletalMesh = Manny.Object;
     static ConstructorHelpers::FObjectFinder<UStaticMesh> Rifle(TEXT("/Game/Weapons/Rifle/Meshes/SM_Rifle.SM_Rifle"));
     if (Rifle.Succeeded()) TrooperRifleMesh = Rifle.Object;
@@ -111,6 +112,7 @@ void AOBEnemyCharacter::ConfigureCharacterVisuals()
     }
     USkeletalMeshComponent* Mesh = GetMesh();
     const bool bBull = bHeavy && HeavySkeletalMesh;
+    if (!bBull) TrooperSkeletalMesh = LoadObject<USkeletalMesh>(nullptr, TEXT("/Game/SciFITrooper_Man_03/SkeletalMesh/SK_SciFITrooper_Man_03"));
     Mesh->SetSkeletalMesh(bBull ? HeavySkeletalMesh.Get() : TrooperSkeletalMesh.Get());
     Mesh->SetRelativeLocation(bBull ? HeavyMeshOffset : FVector(0,0,bHeavy ? -112.f : -90.f));
     Mesh->SetRelativeRotation(bBull ? HeavyMeshRotation : FRotator(0,-90,0));
@@ -132,22 +134,9 @@ void AOBEnemyCharacter::ConfigureCharacterVisuals()
     {
         Mesh->SetAnimationMode(EAnimationMode::AnimationBlueprint);
         Mesh->SetAnimInstanceClass(UOBRifleAnimInstance::StaticClass());
-        // Preserve all authored masks, normal/roughness maps and segmentation.
-        // The cloned shader adds a full-surface tint after its BaseColor graph.
+        // Keep the trooper pack's original textures and material slots.
         for (int32 Index=0; Index<Mesh->GetNumMaterials(); ++Index)
-        {
-            const FString ArmorPath = FString::Printf(TEXT("/Game/OrbitBreakout/Materials/Characters/MI_Armor_%02d.MI_Armor_%02d"), Index+1, Index+1);
-            UMaterialInterface* ArmorMaterial = LoadObject<UMaterialInterface>(nullptr, *ArmorPath);
-            if (ArmorMaterial) Mesh->SetMaterial(Index, ArmorMaterial);
-            if (UMaterialInstanceDynamic* Uniform = Mesh->CreateDynamicMaterialInstance(Index))
-            {
-                Uniform->SetVectorParameterValue(ArmorMaterial ? TEXT("ArmorTint") : TEXT("Paint Tint"),
-                    Index==0 ? FLinearColor(.13f,.18f,.24f) : FLinearColor(.055f,.075f,.095f));
-                Uniform->SetScalarParameterValue(TEXT("MetalPaintMetallic"), .65f);
-                Uniform->SetScalarParameterValue(TEXT("MetalPaintRoughness"), .38f);
-                UniformMIDs.Add(Uniform);
-            }
-        }
+            if (auto* Uniform = Mesh->CreateDynamicMaterialInstance(Index)) UniformMIDs.Add(Uniform);
     }
     const bool bHasWeaponBone = Mesh->GetBoneIndex(TEXT("weapon_r")) != INDEX_NONE;
     const FName GripSocket = bBull ? HeavyWeaponSocket :
@@ -389,7 +378,7 @@ bool AOBEnemyCharacter::CanVisuallyDetect(const AOBPlayerCharacter* Player) cons
     if (!bActive || IsDead() || !Player || Player->bDead) return false;
     const FVector ToPlayer = Player->GetActorLocation() - GetActorLocation();
     const float Distance = ToPlayer.Size2D();
-    if (Distance > AcquisitionRange || FMath::Abs(ToPlayer.Z) > 350.f) return false;
+    if (Distance > AcquisitionRange || FMath::Abs(ToPlayer.Z) > (Player->Parkour()->IsBusy() ? 490.f : 350.f)) return false;
     const float FacingDot = FVector::DotProduct(GetActorForwardVector().GetSafeNormal2D(), ToPlayer.GetSafeNormal2D());
     // Wider peripheral vision, plus close-range awareness from any direction.
     // Every visual acquisition still needs a clear shot path around cover.
@@ -512,7 +501,14 @@ void AOBEnemyCharacter::RequestMove(const FVector& Destination, float Acceptance
     NextMoveTime = Now + .85f;
     AAIController* AI = Cast<AAIController>(Controller);
     if (!AI) return;
-    const EPathFollowingRequestResult::Type Result = AI->MoveToLocation(Destination, AcceptanceRadius, true, true, true, true);
+    FVector Goal = Destination;
+    if (FMath::Abs(Goal.Z - GetActorLocation().Z) > 120.f)
+        if (auto* Nav = UNavigationSystemV1::GetCurrent(GetWorld()))
+        {
+            FNavLocation Landing;
+            if (Nav->ProjectPointToNavigation(Goal,Landing,FVector(120,120,360))) Goal = Landing.Location;
+        }
+    const EPathFollowingRequestResult::Type Result = AI->MoveToLocation(Goal, AcceptanceRadius, true, true, true, true);
     if (Result == EPathFollowingRequestResult::Failed)
     {
         if (UNavigationSystemV1* Nav = UNavigationSystemV1::GetCurrent(GetWorld()))
@@ -540,17 +536,20 @@ void AOBEnemyCharacter::BeginCharge()
     {
         const float Distance = FVector::Dist2D(GetActorLocation(), Target->GetActorLocation());
         const int32 Pattern = BossAttackSequence++ % 3;
-        if (Pattern == 2 && Distance <= ShockwaveRadius + 100.f)
+        const float TargetFeet = Target->GetActorLocation().Z - Target->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+        const float BullFeet = GetActorLocation().Z - GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+        const bool bSameLane = FMath::Abs(TargetFeet - BullFeet) <= 145.f;
+        if (bSameLane && Pattern == 2 && Distance <= ShockwaveRadius + 100.f)
         {
             BeginBossAttack(EOBBossAttack::WaveWarning);
             return;
         }
-        if (Pattern != 0 && Distance > 280.f && Distance <= RushMaxDistance + 150.f)
+        if (bSameLane && Pattern != 0 && Distance > 280.f && Distance <= RushMaxDistance + 150.f)
         {
             BeginBossAttack(EOBBossAttack::RushWarning);
             return;
         }
-        if (Pattern != 0 && Distance <= ShockwaveRadius)
+        if (bSameLane && Pattern != 0 && Distance <= ShockwaveRadius)
         {
             BeginBossAttack(EOBBossAttack::WaveWarning);
             return;

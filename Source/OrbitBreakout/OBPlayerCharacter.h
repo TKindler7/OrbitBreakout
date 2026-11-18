@@ -22,7 +22,13 @@ class ORBITBREAKOUT_API AOBPlayerCharacter : public ACharacter
 {
     GENERATED_BODY()
 public:
-    AOBPlayerCharacter();
+    AOBPlayerCharacter(const FObjectInitializer& Initializer = FObjectInitializer::Get());
+    class UOBParkourMovement* Parkour() const;
+    bool IsParkourEnabled() const;
+    UPROPERTY(Transient) TWeakObjectPtr<class AOBMech> OccupiedMech;
+    const AActor* CombatBody() const;
+    class AOBMech* NearbyMech() const;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Orbit|Camera") TObjectPtr<class UOBPilotView> PilotView;
     virtual void BeginPlay() override;
     virtual void Tick(float DeltaSeconds) override;
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
@@ -64,12 +70,16 @@ public:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Orbit|Runtime") float LastHitTime = -100.f;
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Orbit|Runtime") float LastShotTime = -100.f;
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Orbit|Runtime") float LastDamageTime = -100.f;
+    /** Presentation only: never changes inventory, health, or input permission. */
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Orbit|Presentation") bool bCrashPresentationActive = false;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Orbit|Presentation") float CrashRecoveryElapsed = 0.f;
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Orbit|Runtime") FVector DamageDirection = FVector::ZeroVector;
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Orbit|Camera") TObjectPtr<USpringArmComponent> CameraBoom;
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Orbit|Camera") TObjectPtr<UCameraComponent> FollowCamera;
 
     UFUNCTION(BlueprintCallable) void RestoreLoadout(bool bOwned, int32 Magazine, int32 Reserve);
     UFUNCTION(BlueprintCallable) void CancelActions();
+    void SetCrashPresentation(bool bActive, float RecoveryElapsed = 0.f);
     void ClearHeldInputPreservingInteraction();
     UFUNCTION(BlueprintCallable) bool AddHealth(float Amount);
     UFUNCTION(BlueprintCallable) bool AddAmmo(int32 Amount);
@@ -80,6 +90,12 @@ public:
     UFUNCTION(BlueprintCallable) bool EquipWeapon(EOBWeaponType Weapon);
     UFUNCTION(BlueprintPure) FString GetWeaponName() const;
     UFUNCTION(BlueprintPure) int32 GetArcReserveAmmo() const;
+    UFUNCTION(BlueprintPure) int32 GetArcMagazineAmmo() const;
+    UFUNCTION(BlueprintPure) int32 GetHelixMagazineAmmo() const;
+    UFUNCTION(BlueprintCallable) void RestoreCampaignLoadout(bool bArc, int32 ArcMag, int32 InArcReserve, bool bHelix, int32 HelixMag, int32 InHelixReserve, EOBWeaponType Selected);
+    /** Contextual gamepad action: interact takes precedence over reloading. */
+    UFUNCTION(BlueprintCallable) void GamepadContextPressed();
+    UFUNCTION(BlueprintCallable) void GamepadContextReleased();
     UFUNCTION(BlueprintPure) int32 GetArcMagazineCapacity() const { return bArcTuningCached ? ArcCapacity : MagazineCapacity; }
     UFUNCTION(BlueprintPure) int32 GetHelixReserveAmmo() const;
     UFUNCTION(BlueprintCallable) void DamagePlayer(float Amount, FVector SourceLocation);
@@ -90,6 +106,14 @@ public:
     UFUNCTION(BlueprintCallable, Category="Orbit|Presentation") void RefreshWeaponAttachment();
 
 private:
+#if WITH_DEV_AUTOMATION_TESTS
+    friend class FOBPilotUpgradeTest;
+#endif
+    friend class UOBPilotView;
+    UPROPERTY() TObjectPtr<UStaticMeshComponent> SightRifle;
+    UPROPERTY() TObjectPtr<UStaticMeshComponent> SightCell;
+    void StartSlide();
+    void ReleaseJump();
     UPROPERTY() TObjectPtr<USceneComponent> WeaponPivot;
     UPROPERTY() TObjectPtr<UStaticMeshComponent> WeaponBody;
     UPROPERTY() TObjectPtr<UStaticMeshComponent> WeaponBarrel;
@@ -132,6 +156,8 @@ private:
     void MoveForward(float Value);
     void MoveRight(float Value);
     void Turn(float Value);
+    void TurnRate(float Value);
+    void LookUpRate(float Value);
     void LookUp(float Value);
     void StartJump();
     void StartSprint();

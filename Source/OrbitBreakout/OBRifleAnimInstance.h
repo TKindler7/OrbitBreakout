@@ -21,6 +21,8 @@ public:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Orbit|Animation") float GroundSpeed = 0.f;
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Orbit|Animation") float AimPitch = 0.f;
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Orbit|Animation") bool bArmed = false;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Orbit|Animation") float CrashPresentationWeight = 0.f;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Orbit|Animation") float CrashRecoveryWeight = 0.f;
 
     // Hard references make these installed template animations available to the cooker.
     UPROPERTY() TObjectPtr<UAnimSequence> UnarmedIdle;
@@ -36,8 +38,19 @@ public:
     UPROPERTY() TObjectPtr<UAnimSequence> UnarmedFall;
     UPROPERTY() TObjectPtr<UAnimSequence> RifleFall;
     UPROPERTY() TObjectPtr<UAnimSequence> Death;
+    UPROPERTY() TObjectPtr<UAnimSequence> CrashRecovery;
+    UPROPERTY() TObjectPtr<UAnimSequence> TraversalLand;
 
 protected:
     virtual FAnimInstanceProxy* CreateAnimInstanceProxy() override;
     virtual void DestroyAnimInstanceProxy(FAnimInstanceProxy* InProxy) override;
+};
+
+/** Wraith uses his own skeleton and authored combat locomotion, never mannequin poses. */
+UCLASS(Transient)
+class ORBITBREAKOUT_API UOBWraithAnimInstance : public UOBRifleAnimInstance
+{
+    GENERATED_BODY()
+public:
+    UOBWraithAnimInstance();
 };

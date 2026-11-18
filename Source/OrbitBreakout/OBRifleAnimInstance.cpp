@@ -1,6 +1,8 @@
 #include "OBRifleAnimInstance.h"
+#include "OBParkourMovement.h"
 #include "OBPlayerCharacter.h"
 #include "OBEnemyCharacter.h"
+#include "OBMachineEnemy.h"
 #include "Animation/AnimInstanceProxy.h"
 #include "Animation/AnimationPoseData.h"
 #include "Animation/AnimSequence.h"
@@ -19,8 +21,8 @@ UAnimSequence* Sequence(const FString& Path)
     return Asset.Object;
 }
 
-// These assets share the mannequin skeleton and an authored rifle grip. Sampling
-// them directly avoids an animation Blueprint that depends on a template pawn.
+// Each character uses animations authored or retargeted for its own skeleton.
+// Keep locomotion continuous while applying recoil only above the pelvis.
 struct FOBRifleAnimProxy final : FAnimInstanceProxy
 {
     explicit FOBRifleAnimProxy(UAnimInstance* Instance) : FAnimInstanceProxy(Instance) {}
@@ -33,6 +35,13 @@ struct FOBRifleAnimProxy final : FAnimInstanceProxy
     UAnimSequence* AimDown = nullptr;
     UAnimSequence* Fall = nullptr;
     UAnimSequence* Death = nullptr;
+    UAnimSequence* SecurityAction = nullptr;
+    UAnimSequence* Recovery = nullptr;
+    UAnimSequence* ContactPose = nullptr;
+    float ContactWeight = 0.f, ContactSample = 0.f;
+    UAnimSequence* RelaxedIdle = nullptr;
+    float CrashWeight = 0.f, RecoveryWeight = 0.f, RecoveryTime = 0.f;
+    float SecurityActionProgress = 0.f;
     float Speed = 0.f, Direction = 0.f, Phase = 0.f, Clock = 0.f;
     float MoveWeight = 0.f, JogWeight = 0.f, FallingWeight = 0.f;
     float Pitch = 0.f, ReloadPosition = 0.f, ReloadWeight = 0.f;
@@ -52,11 +61,21 @@ struct FOBRifleAnimProxy final : FAnimInstanceProxy
         float DesiredPitch = 0.f;
         bool Reloading = false;
         bool Dead = false;
+        bool CrashActive = false;
         bArmed = true;
         SinceShot = 100.f;
+        SecurityAction = nullptr;
+        SecurityActionProgress = 0.f;
         if (const auto* Player = Cast<AOBPlayerCharacter>(Character))
         {
             bArmed = Player->bWeaponOwned;
+            CrashActive = Player->bCrashPresentationActive;
+            RecoveryTime = Player->CrashRecoveryElapsed;
+            const auto Mode = Player->Parkour()->Traversal;
+            const bool Low = Mode == EOBTraversal::Slide || Player->bIsCrouched;
+            ContactPose = Low ? Anim->TraversalLand.Get() : Anim->RifleFall.Get();
+            ContactSample = Low ? .12f : .2f;
+            ContactWeight = FMath::FInterpTo(ContactWeight, Low || Mode == EOBTraversal::Mantle || Mode == EOBTraversal::WallRun ? .9f : 0.f, DeltaSeconds, 15.f);
             Reloading = Player->bReloading;
             // Hold the final reload sample while the upper-body layer fades out.
             if (Reloading) ReloadPosition = Player->ReloadProgress;
@@ -70,6 +89,14 @@ struct FOBRifleAnimProxy final : FAnimInstanceProxy
             Dead = Enemy->IsDead();
             DesiredPitch = Enemy->GetVisualAimPitch();
             SinceShot = Character->GetWorld()->GetTimeSeconds() - Enemy->LastShotTime;
+        }
+        else if (const auto* Security = Cast<AOBMachineEnemy>(Character))
+        {
+            Dead = Security->IsDead();
+            DesiredPitch = Security->GetVisualAimPitch();
+            SinceShot = Character->GetWorld()->GetTimeSeconds() - Security->LastShotTime;
+            SecurityAction = Security->GetVisualActionAnimation();
+            SecurityActionProgress = Security->GetVisualActionProgress();
         }
         DeathTime = Dead ? (bDead ? DeathTime + DeltaSeconds : 0.f) : 0.f;
         bDead = Dead;
@@ -89,6 +116,14 @@ struct FOBRifleAnimProxy final : FAnimInstanceProxy
         AimUp = Anim->RifleAimUp; AimDown = Anim->RifleAimDown;
         Fall = bArmed ? Anim->RifleFall.Get() : Anim->UnarmedFall.Get();
         Death = Anim->Death;
+        Recovery = Anim->CrashRecovery;
+        RelaxedIdle = Anim->UnarmedIdle;
+        CrashWeight = FMath::FInterpConstantTo(CrashWeight, CrashActive ? 1.f : 0.f, DeltaSeconds, 2.5f);
+        RecoveryWeight = Recovery ? FMath::Min(
+            FMath::SmoothStep(0.f, .3f, RecoveryTime),
+            1.f - FMath::SmoothStep(FMath::Max(0.f, Recovery->GetPlayLength()-.65f), Recovery->GetPlayLength(), RecoveryTime)) : 0.f;
+        Anim->CrashPresentationWeight = CrashWeight;
+        Anim->CrashRecoveryWeight = CrashWeight * RecoveryWeight;
         const float WalkLength = Walk.Num() && Walk[0] ? Walk[0]->GetPlayLength() : 1.f;
         const float JogLength = Jog.Num() && Jog[0] ? Jog[0]->GetPlayLength() : .75f;
         const float Rate = FMath::Lerp(FMath::Clamp(Speed / 180.f, .5f, 1.5f) / FMath::Max(.1f, WalkLength),
@@ -129,10 +164,10 @@ struct FOBRifleAnimProxy final : FAnimInstanceProxy
 
     void Directional(const TArray<UAnimSequence*>& Assets, FPoseContext& Output)
     {
-        if (Assets.Num() != 8) { Sample(Idle, Clock, true, Output); return; }
-        const float Octant = FMath::Fmod(Direction + 360.f, 360.f) / 45.f;
-        const int32 First = FMath::FloorToInt(Octant) % 8;
-        const int32 Second = (First + 1) % 8;
+        if (Assets.Num() != 8 && Assets.Num() != 4) { Sample(Idle, Clock, true, Output); return; }
+        const float Octant = FMath::Fmod(Direction + 360.f, 360.f) / (360.f / Assets.Num());
+        const int32 First = FMath::FloorToInt(Octant) % Assets.Num();
+        const int32 Second = (First + 1) % Assets.Num();
         FPoseContext A(this), B(this);
         Sample(Assets[First], Assets[First] ? Phase * Assets[First]->GetPlayLength() : 0.f, true, A);
         Sample(Assets[Second], Assets[Second] ? Phase * Assets[Second]->GetPlayLength() : 0.f, true, B);
@@ -165,6 +200,11 @@ struct FOBRifleAnimProxy final : FAnimInstanceProxy
             Sample(Death, DeathTime, false, Output);
             return true;
         }
+        if (SecurityAction)
+        {
+            Sample(SecurityAction, SecurityActionProgress * SecurityAction->GetPlayLength(), false, Output);
+            return true;
+        }
         FPoseContext IdlePose(this), WalkPose(this), JogPose(this), MovePose(this);
         Sample(Idle, Clock, true, IdlePose);
         Directional(Walk, WalkPose);
@@ -177,6 +217,13 @@ struct FOBRifleAnimProxy final : FAnimInstanceProxy
             Ground = Output;
             Sample(Fall, Clock, true, Air);
             Blend(Ground, Air, FallingWeight, Output);
+        }
+        if (ContactPose && ContactWeight > .001f)
+        {
+            FPoseContext Contact(this), Base(Output);
+            Base = Output;
+            Sample(ContactPose, ContactSample, false, Contact);
+            Blend(Base, Contact, ContactWeight, Output);
         }
         if (bArmed && ReloadWeight > .001f && Reload)
         {
@@ -191,7 +238,11 @@ struct FOBRifleAnimProxy final : FAnimInstanceProxy
             if (Fire->IsValidAdditive())
             {
                 FAnimationPoseData Base(Output), Additive(FirePose);
-                FAnimationRuntime::AccumulateAdditivePose(Base, Additive, 1.f, Fire->GetAdditiveAnimType());
+                FPoseContext Recoiled(Output);
+                Recoiled = Output;
+                FAnimationPoseData RecoiledData(Recoiled);
+                FAnimationRuntime::AccumulateAdditivePose(RecoiledData, Additive, .65f, Fire->GetAdditiveAnimType());
+                UpperBody(Recoiled, 1.f, Output);
             }
             else UpperBody(FirePose, .6f * (1.f - FMath::Clamp(SinceShot / .22f, 0.f, 1.f)), Output);
         }
@@ -224,6 +275,21 @@ struct FOBRifleAnimProxy final : FAnimInstanceProxy
                 }
             }
         }
+        if (CrashWeight > .001f && RelaxedIdle)
+        {
+            // An authored, non-looping recovery returns to a relaxed pose.
+            // The outer layer blends back to the unchanged gameplay pose, so
+            // an early skip cannot leave a scoped, airborne, or frozen sample.
+            FPoseContext Relaxed(this), Recovering(this), Presentation(this), Gameplay(Output);
+            Gameplay = Output;
+            Sample(RelaxedIdle, Clock, true, Relaxed);
+            Sample(Recovery, RecoveryTime, false, Recovering);
+            // Presentation must not move the mesh away from its grounded
+            // capsule even if an authored entrance clip contains root travel.
+            if (Recovering.Pose.GetNumBones()>0) Recovering.Pose[FCompactPoseBoneIndex(0)]=Relaxed.Pose[FCompactPoseBoneIndex(0)];
+            Blend(Relaxed, Recovering, RecoveryWeight, Presentation);
+            Blend(Gameplay, Presentation, CrashWeight, Output);
+        }
         Output.Pose.NormalizeRotations();
         return true;
     }
@@ -232,24 +298,24 @@ struct FOBRifleAnimProxy final : FAnimInstanceProxy
 
 UOBRifleAnimInstance::UOBRifleAnimInstance()
 {
-    const FString Root = TEXT("/Game/Characters/Mannequins/Anims/");
-    UnarmedIdle = Sequence(Root + TEXT("Unarmed/MM_Idle"));
-    RifleIdle = Sequence(Root + TEXT("Rifle/MF_Rifle_Idle_ADS"));
+    const FString Root = TEXT("/Game/OrbitBreakout/Animations/Trooper/");
+    UnarmedIdle = Sequence(Root + TEXT("MM_Idle"));
+    RifleIdle = Sequence(Root + TEXT("MF_Rifle_Idle_ADS"));
     const TCHAR* Directions[] = {TEXT("Fwd"), TEXT("Fwd_Right"), TEXT("Right"), TEXT("Bwd_Right"), TEXT("Bwd"), TEXT("Bwd_Left"), TEXT("Left"), TEXT("Fwd_Left")};
     for (const TCHAR* Direction : Directions)
     {
-        UnarmedWalk.Add(Sequence(Root + FString::Printf(TEXT("Unarmed/Walk/MF_Unarmed_Walk_%s"), Direction)));
-        UnarmedJog.Add(Sequence(Root + FString::Printf(TEXT("Unarmed/Jog/MF_Unarmed_Jog_%s"), Direction)));
-        RifleWalk.Add(Sequence(Root + FString::Printf(TEXT("Rifle/Walk/MF_Rifle_Walk_%s"), Direction)));
-        RifleJog.Add(Sequence(Root + FString::Printf(TEXT("Rifle/Jog/MF_Rifle_Jog_%s"), Direction)));
+        UnarmedWalk.Add(Sequence(Root + FString::Printf(TEXT("MF_Unarmed_Walk_%s"), Direction)));
+        UnarmedJog.Add(Sequence(Root + FString::Printf(TEXT("MF_Unarmed_Jog_%s"), Direction)));
+        RifleWalk.Add(Sequence(Root + FString::Printf(TEXT("MF_Rifle_Walk_%s"), Direction)));
+        RifleJog.Add(Sequence(Root + FString::Printf(TEXT("MF_Rifle_Jog_%s"), Direction)));
     }
-    RifleReload = Sequence(Root + TEXT("Rifle/MM_Rifle_Reload"));
-    RifleFire = Sequence(Root + TEXT("Rifle/MM_Rifle_Fire"));
-    RifleAimUp = Sequence(Root + TEXT("Rifle/AIM/MM_Rifle_Idle_ADS_AO_CU"));
-    RifleAimDown = Sequence(Root + TEXT("Rifle/AIM/MM_Rifle_Idle_ADS_AO_CD"));
-    UnarmedFall = Sequence(Root + TEXT("Unarmed/Jump/MM_Fall_Loop"));
-    RifleFall = Sequence(Root + TEXT("Rifle/Jump/MM_Rifle_Jump_Fall_Loop"));
-    Death = Sequence(Root + TEXT("Death/MM_Death_Back_01"));
+    RifleReload = Sequence(Root + TEXT("MM_Rifle_Reload"));
+    RifleFire = Sequence(Root + TEXT("MM_Rifle_Fire"));
+    RifleAimUp = Sequence(Root + TEXT("MM_Rifle_Idle_ADS_AO_CU"));
+    RifleAimDown = Sequence(Root + TEXT("MM_Rifle_Idle_ADS_AO_CD"));
+    UnarmedFall = Sequence(Root + TEXT("MM_Fall_Loop"));
+    RifleFall = Sequence(Root + TEXT("MM_Rifle_Jump_Fall_Loop"));
+    Death = Sequence(Root + TEXT("MM_Death_Back_01"));
 }
 
 FAnimInstanceProxy* UOBRifleAnimInstance::CreateAnimInstanceProxy() { return new FOBRifleAnimProxy(this); }
@@ -261,4 +327,28 @@ FTransform UOBRifleAnimInstance::GetWeaponBoneInRightHand()
     // the animation skeleton rather than inferred from mesh socket names.
     return FTransform(FQuat(-.086687, -.122754, .986567, .064048).GetNormalized(),
         FVector(-7.218102, 3.417867, -.946828), FVector::OneVector);
+}
+
+UOBWraithAnimInstance::UOBWraithAnimInstance()
+{
+    const FString Root = TEXT("/Game/ParagonWraith/Characters/Heroes/Wraith/Animations/");
+    UnarmedIdle = Sequence(Root + TEXT("Idle_NonCombat"));
+    RifleIdle = Sequence(Root + TEXT("Idle_Ability_RMB"));
+    UnarmedWalk.Reset(); UnarmedJog.Reset(); RifleWalk.Reset(); RifleJog.Reset();
+    // Four authored directions; diagonal movement blends neighbouring cardinal samples.
+    const TCHAR* Names[] = {TEXT("Fwd"),TEXT("Right"),TEXT("Bwd"),TEXT("Left")};
+    for (const TCHAR* Name : Names)
+    {
+        auto* Jog = Sequence(Root + FString::Printf(TEXT("Jog_%s"),Name));
+        auto* Combat = Sequence(Root + FString::Printf(TEXT("Ability_RMB_Walk_%s"),Name));
+        auto* CombatJog = Sequence(Root + FString::Printf(TEXT("Locomotion_Combat/Jog_%s_Combat"),Name));
+        UnarmedWalk.Add(Jog); UnarmedJog.Add(Jog); RifleWalk.Add(Combat); RifleJog.Add(CombatJog);
+    }
+    RifleFire = Sequence(Root + TEXT("Fire_A_Fast_V1"));
+    RifleReload = nullptr; // No reload clip supplied; retain the stable two-handed grip.
+    RifleAimUp = nullptr; RifleAimDown = nullptr;
+    UnarmedFall = RifleFall = Sequence(Root + TEXT("Jump_Apex"));
+    Death = Sequence(Root + TEXT("Death_Backward"));
+    TraversalLand = Sequence(Root + TEXT("Jump_Land"));
+    CrashRecovery = Sequence(Root + TEXT("Level_Start"));
 }

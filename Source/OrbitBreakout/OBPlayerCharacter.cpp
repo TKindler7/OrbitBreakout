@@ -1,6 +1,11 @@
 #include "OBPlayerCharacter.h"
+#include "OBLevel2.h"
+#include "OBMech.h"
 #include "OBCore.h"
+#include "OBParkourMovement.h"
+#include "OBPilotView.h"
 #include "OBEnemyCharacter.h"
+#include "OBMachineEnemy.h"
 #include "OBUI.h"
 #include "OBRifleAnimInstance.h"
 #include "Camera/CameraComponent.h"
@@ -23,7 +28,8 @@
 #include "UObject/ConstructorHelpers.h"
 #include "InputCoreTypes.h"
 
-AOBPlayerCharacter::AOBPlayerCharacter()
+AOBPlayerCharacter::AOBPlayerCharacter(const FObjectInitializer& Initializer)
+    : Super(Initializer.SetDefaultSubobjectClass<UOBParkourMovement>(ACharacter::CharacterMovementComponentName))
 {
     PrimaryActorTick.bCanEverTick = true;
     GetCapsuleComponent()->InitCapsuleSize(42.f, 96.f);
@@ -35,7 +41,10 @@ AOBPlayerCharacter::AOBPlayerCharacter()
     Movement->bOrientRotationToMovement = true;
     Movement->RotationRate = FRotator(0.f, 540.f, 0.f);
     Movement->JumpZVelocity = 500.f;
-    Movement->AirControl = .25f;
+    Movement->AirControl = .36f;
+    Movement->GetNavAgentPropertiesRef().bCanCrouch = true;
+    Movement->SetCrouchedHalfHeight(48.f);
+    PilotView = CreateDefaultSubobject<UOBPilotView>(TEXT("PilotView"));
     Movement->MaxWalkSpeed = WalkSpeed;
     Movement->MaxAcceleration = 2000.f;
     Movement->BrakingDecelerationWalking = 2000.f;
@@ -53,9 +62,9 @@ AOBPlayerCharacter::AOBPlayerCharacter()
     FollowCamera->bUsePawnControlRotation = false;
     FollowCamera->FieldOfView = 85.f;
 
-    static ConstructorHelpers::FObjectFinder<USkeletalMesh> Manny(TEXT("/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"));
+    static ConstructorHelpers::FObjectFinder<USkeletalMesh> Manny(TEXT("/Game/ParagonWraith/Characters/Heroes/Wraith/Meshes/Wraith.Wraith"));
     if (Manny.Succeeded()) GetMesh()->SetSkeletalMesh(Manny.Object);
-    GetMesh()->SetAnimInstanceClass(UOBRifleAnimInstance::StaticClass());
+    GetMesh()->SetAnimInstanceClass(UOBWraithAnimInstance::StaticClass());
     GetMesh()->SetRelativeLocation(FVector(0, 0, -96));
     GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
     GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -81,6 +90,14 @@ AOBPlayerCharacter::AOBPlayerCharacter()
         Component->SetCastShadow(true);
         return Component;
     };
+    SightRifle = Part(TEXT("PrecisionRifle"), FollowCamera, FVector::ZeroVector, FVector::OneVector, Rifle.Object);
+    SightCell = Part(TEXT("PrecisionCapacitor"), SightRifle, FVector(4,22,5), FVector(.06,.16,.06), Sphere.Object);
+    for (auto* Sight : {SightRifle.Get(),SightCell.Get()})
+    {
+        Sight->SetOnlyOwnerSee(true);
+        Sight->SetVisibility(false);
+        Sight->SetCastShadow(false);
+    }
     WeaponBody = Part(TEXT("ARC9Body"), WeaponPivot, FVector::ZeroVector, FVector(1.f), Rifle.Succeeded() ? Rifle.Object : Cube.Object);
     // Keep the legacy component name for existing level instances, but the rifle
     // already includes a modelled barrel. Its long axis is local +Y.
@@ -119,35 +136,14 @@ void AOBPlayerCharacter::BeginPlay()
 
 void AOBPlayerCharacter::RefreshWeaponAttachment()
 {
-    const bool bHasGrip = WeaponSocketName == FName(TEXT("weapon_r"))
-        ? GetMesh()->GetBoneIndex(WeaponSocketName) != INDEX_NONE
-        : GetMesh()->DoesSocketExist(WeaponSocketName);
-    const FName Socket = bHasGrip ? WeaponSocketName : FName(TEXT("hand_r"));
-    WeaponPivot->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, Socket);
-    WeaponPivot->SetRelativeTransform(Socket == FName(TEXT("hand_r"))
-        ? WeaponGripTransform * UOBRifleAnimInstance::GetWeaponBoneInRightHand()
-        : WeaponGripTransform);
-    MuzzleGlow->SetRelativeLocation(EquippedWeapon == EOBWeaponType::Helix12 ? FVector(0,58,3) : WeaponMuzzleOffset);
+    WeaponPivot->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("Muzzle_01"));
+    WeaponPivot->SetRelativeTransform(FTransform::Identity);
+    MuzzleGlow->SetRelativeLocation(FVector::ZeroVector);
 }
 
 void AOBPlayerCharacter::SetupVisualMaterials()
 {
-    // Keep the installed mannequin's skeletal shader and surface detail while
-    // giving Rook the charcoal/teal palette that distinguishes him from guards.
-    for (int32 Slot = 0; Slot < GetMesh()->GetNumMaterials(); ++Slot)
-    {
-        const TCHAR* ArmorPath = Slot == 0
-            ? TEXT("/Game/OrbitBreakout/Materials/Characters/MI_Armor_01.MI_Armor_01")
-            : TEXT("/Game/OrbitBreakout/Materials/Characters/MI_Armor_02.MI_Armor_02");
-        if (UMaterialInterface* Armor = LoadObject<UMaterialInterface>(nullptr, ArmorPath))
-            GetMesh()->SetMaterial(Slot, Armor);
-        if (UMaterialInstanceDynamic* Suit = GetMesh()->CreateDynamicMaterialInstance(Slot))
-        {
-            Suit->SetVectorParameterValue(TEXT("ArmorTint"), FLinearColor(.16f,.23f,.28f));
-            Suit->SetVectorParameterValue(TEXT("LogoTint"), FLinearColor(.08f,.65f,.6f));
-            Suit->SetScalarParameterValue(TEXT("MetalPaintRoughness"), .38f);
-        }
-    }
+    // Preserve Wraith's authored materials, including his integrated rifle.
     UMaterialInterface* Metal = LoadObject<UMaterialInterface>(nullptr,TEXT("/Game/OrbitBreakout/Materials/M_Metal.M_Metal"));
     EffectMaterial = LoadObject<UMaterialInterface>(nullptr,TEXT("/Game/OrbitBreakout/Materials/M_Emissive.M_Emissive"));
     auto Tint = [&](UStaticMeshComponent* Part, UMaterialInterface* Material, const FLinearColor& Color, float Glow)
@@ -160,10 +156,15 @@ void AOBPlayerCharacter::SetupVisualMaterials()
     };
     // Preserve the rifle's normal/colour textures, rather than replacing it with a flat shader.
     ArcRifleMaterial = LoadObject<UMaterialInterface>(nullptr,TEXT("/Game/OrbitBreakout/Materials/M_Arc9.M_Arc9"));
-    if (ArcRifleMaterial) WeaponBody->SetMaterial(0, ArcRifleMaterial);
+    if (ArcRifleMaterial)
+    {
+        WeaponBody->SetMaterial(0, ArcRifleMaterial);
+        SightRifle->SetMaterial(0, ArcRifleMaterial);
+    }
     Tint(HelixShroud, Metal, FLinearColor(.08,.16,.20), 0);
     Tint(HelixLeftRail, EffectMaterial, FLinearColor(.08,1,.65), 2.4f);
     Tint(HelixRightRail, EffectMaterial, FLinearColor(.08,1,.65), 2.4f);
+    Tint(SightCell, EffectMaterial, FLinearColor(.15,.95,1), 1.4f);
     Tint(HelixCell, EffectMaterial, FLinearColor(.15,.95,1), 2.4f);
     Tint(WeaponBarrel, Metal, FLinearColor(.14,.20,.24), 0);
     Tint(WeaponStrip, EffectMaterial, FLinearColor(.06,.85,.78), 1.6f);
@@ -176,10 +177,13 @@ void AOBPlayerCharacter::SetupPlayerInputComponent(UInputComponent* Input)
     Super::SetupPlayerInputComponent(Input);
     Input->BindAxis(TEXT("MoveForward"), this, &AOBPlayerCharacter::MoveForward);
     Input->BindAxis(TEXT("MoveRight"), this, &AOBPlayerCharacter::MoveRight);
+    Input->BindAxis(TEXT("TurnRate"), this, &AOBPlayerCharacter::TurnRate);
+    Input->BindAxis(TEXT("LookUpRate"), this, &AOBPlayerCharacter::LookUpRate);
     Input->BindAxis(TEXT("Turn"), this, &AOBPlayerCharacter::Turn);
     Input->BindAxis(TEXT("LookUp"), this, &AOBPlayerCharacter::LookUp);
     Input->BindAction(TEXT("Jump"), IE_Pressed, this, &AOBPlayerCharacter::StartJump);
-    Input->BindAction(TEXT("Jump"), IE_Released, this, &ACharacter::StopJumping);
+    Input->BindAction(TEXT("Jump"), IE_Released, this, &AOBPlayerCharacter::ReleaseJump);
+    Input->BindAction(TEXT("Slide"), IE_Pressed, this, &AOBPlayerCharacter::StartSlide);
     Input->BindAction(TEXT("Sprint"), IE_Pressed, this, &AOBPlayerCharacter::StartSprint);
     Input->BindAction(TEXT("Sprint"), IE_Released, this, &AOBPlayerCharacter::StopSprint);
     Input->BindAction(TEXT("Aim"), IE_Pressed, this, &AOBPlayerCharacter::StartAim);
@@ -206,7 +210,7 @@ void AOBPlayerCharacter::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
     if (!Director.IsValid()) Director = AOBMissionDirector::Get(this);
-    if (bDead) return;
+    if (bDead || OccupiedMech.IsValid()) return;
     if (IsGameplayActive())
     {
         if (GetActorLocation().Z < -1000.f)
@@ -218,9 +222,9 @@ void AOBPlayerCharacter::Tick(float DeltaSeconds)
         const APlayerController* PC = Cast<APlayerController>(Controller);
         if (PC)
         {
-            if (bFireHeld && !PC->IsInputKeyDown(EKeys::LeftMouseButton)) StopFire();
-            if (bSprintHeld && !PC->IsInputKeyDown(EKeys::LeftShift)) StopSprint();
-            if (bAiming && !PC->IsInputKeyDown(EKeys::RightMouseButton)) StopAim();
+            if (bFireHeld && !(PC->IsInputKeyDown(EKeys::LeftMouseButton) || PC->IsInputKeyDown(EKeys::Gamepad_RightTrigger))) StopFire();
+            if (bSprintHeld && !(PC->IsInputKeyDown(EKeys::LeftShift) || PC->IsInputKeyDown(EKeys::Gamepad_LeftThumbstick))) StopSprint();
+            if (bAiming && !(PC->IsInputKeyDown(EKeys::RightMouseButton) || PC->IsInputKeyDown(EKeys::Gamepad_LeftTrigger))) StopAim();
             // Pause-menu key flushes generate synthetic releases. The controller
             // retains the physical E state separately until release/focus loss.
             const AOBPlayerController* OBPC = Cast<AOBPlayerController>(PC);
@@ -231,18 +235,20 @@ void AOBPlayerCharacter::Tick(float DeltaSeconds)
     }
     const float Time = GetWorld()->GetTimeSeconds();
     ReloadProgress = bReloading ? FMath::Clamp((Time - ReloadStartTime) / ReloadDuration, 0.f, 1.f) : 0.f;
-    CameraBoom->TargetArmLength = FMath::FInterpTo(CameraBoom->TargetArmLength, bAiming ? 220.f : 320.f, DeltaSeconds, 16.f);
-    CameraBoom->SocketOffset = FMath::VInterpTo(CameraBoom->SocketOffset, FVector(0, bAiming ? 55.f : 35.f, 65.f), DeltaSeconds, 16.f);
-    FollowCamera->SetFieldOfView(FMath::FInterpTo(FollowCamera->FieldOfView, bAiming ? 70.f : 85.f, DeltaSeconds, 16.f));
-    const bool bFacingAim = bAiming || bFireHeld || (Time - LastShotTime < .25f);
-    bUseControllerRotationYaw = bFacingAim;
+    PilotView->UpdateView(*this, DeltaSeconds, IsGameplayActive());
+    const bool bFacingAim = bWeaponOwned && !bSprinting;
+    bUseControllerRotationYaw = false;
+    GetCharacterMovement()->bUseControllerDesiredRotation = bFacingAim;
     GetCharacterMovement()->bOrientRotationToMovement = !bFacingAim;
     VisualRecoil = FMath::FInterpTo(VisualRecoil, 0.f, DeltaSeconds, 18.f);
     // Aim and recoil are animated through the upper body. The grip stays fixed
     // to the right hand, so the left hand follows the authored support grip.
-    MuzzleGlow->SetVisibility(bWeaponOwned && Time - LastShotTime < .045f);
+    // Wraith already carries an animated rifle. Do not draw a second gun over it.
+    UpdateWeaponVisuals();
+
     // A small positional recoil avoids cumulative camera drift and respects the comfort setting.
     const auto* GI = GetGameInstance<UOBGameInstance>();
+    MuzzleGlow->SetVisibility(bWeaponOwned && Time - LastShotTime < .045f && !(GI && GI->Settings && GI->Settings->bReducedFlashes));
     const float Shake = GI && GI->Settings ? GI->Settings->CameraShakeScale : .35f;
     FollowCamera->SetRelativeLocation(FVector(-VisualRecoil * 2.f * Shake, 0, VisualRecoil * Shake));
 }
@@ -262,7 +268,7 @@ void AOBPlayerCharacter::Turn(float Value)
     if (!IsGameplayActive()) return;
     const auto* GI = GetGameInstance<UOBGameInstance>();
     const float Sensitivity = GI && GI->Settings ? GI->Settings->MouseSensitivity : 1.f;
-    AddControllerYawInput(Value * Sensitivity);
+    AddControllerYawInput(Value * Sensitivity * FMath::Lerp(1.f, GI && GI->Settings ? GI->Settings->ADSSensitivity : .8f, PilotView->Alpha));
 }
 void AOBPlayerCharacter::LookUp(float Value)
 {
@@ -270,18 +276,42 @@ void AOBPlayerCharacter::LookUp(float Value)
     const auto* GI = GetGameInstance<UOBGameInstance>();
     const float Sensitivity = GI && GI->Settings ? GI->Settings->MouseSensitivity : 1.f;
     const bool bInvert = GI && GI->Settings && GI->Settings->bInvertVerticalLook;
-    AddControllerPitchInput(Value * Sensitivity * (bInvert ? -1.f : 1.f));
+    AddControllerPitchInput(Value * Sensitivity * FMath::Lerp(1.f, GI && GI->Settings ? GI->Settings->ADSSensitivity : .8f, PilotView->Alpha) * (bInvert ? -1.f : 1.f));
 }
-void AOBPlayerCharacter::StartJump() { if (IsGameplayActive() && !bInteractionActive) Jump(); }
+void AOBPlayerCharacter::TurnRate(float Value)
+{
+    Turn(Value * 90.f * GetWorld()->GetDeltaSeconds());
+}
+void AOBPlayerCharacter::LookUpRate(float Value)
+{
+    LookUp(Value * 90.f * GetWorld()->GetDeltaSeconds());
+}
+UOBParkourMovement* AOBPlayerCharacter::Parkour() const { return CastChecked<UOBParkourMovement>(GetCharacterMovement()); }
+bool AOBPlayerCharacter::IsParkourEnabled() const { return Director.IsValid() && Director->bEnableParkour; }
+const AActor* AOBPlayerCharacter::CombatBody() const { return OccupiedMech.IsValid() ? static_cast<const AActor*>(OccupiedMech.Get()) : this; }
+AOBMech* AOBPlayerCharacter::NearbyMech() const
+{
+    const auto* L2 = Cast<AOBLevel2Director>(Director.Get());
+    return L2 && L2->WardenMech && L2->WardenMech->CanBoard(*this) ? L2->WardenMech.Get() : nullptr;
+}
+void AOBPlayerCharacter::StartSlide() { Parkour()->StartSlide(); }
+void AOBPlayerCharacter::ReleaseJump() { Parkour()->ReleaseJump(); }
+void AOBPlayerCharacter::StartJump()
+{
+    if (!IsGameplayActive() || bInteractionActive) return;
+    if (IsParkourEnabled()) Parkour()->PressJump();
+    else Jump();
+}
 void AOBPlayerCharacter::StartSprint()
 {
     if (!IsGameplayActive() || bInteractionActive || bAiming || bFireHeld) return;
     CancelReload(); bSprintHeld = true; UpdateSpeed();
 }
-void AOBPlayerCharacter::StopSprint() { bSprintHeld = false; bSprinting = false; UpdateSpeed(); }
+void AOBPlayerCharacter::StopSprint() { Parkour()->EndSlide(); bSprintHeld = false; bSprinting = false; UpdateSpeed(); }
 void AOBPlayerCharacter::StartAim()
 {
     if (!IsGameplayActive() || !bWeaponOwned || bInteractionActive) return;
+    if (Parkour()->IsBusy()) return;
     bAiming = true; StopSprint();
 }
 void AOBPlayerCharacter::StopAim() { bAiming = false; UpdateSpeed(); }
@@ -293,6 +323,7 @@ void AOBPlayerCharacter::UpdateSpeed()
 
 void AOBPlayerCharacter::StartFire()
 {
+    if (Parkour()->IsBusy()) return;
     if (!IsGameplayActive() || !bWeaponOwned || bInteractionActive) return;
     bFireHeld = true; StopSprint(); FireTick();
     GetWorldTimerManager().SetTimer(FireTimer, this, &AOBPlayerCharacter::FireTick, FMath::Max(.05f, ShotInterval), true);
@@ -310,9 +341,9 @@ void AOBPlayerCharacter::FireTick()
     // frame after reloading. Never emit a stale held-trigger shot after release.
     if (const APlayerController* PC = Cast<APlayerController>(Controller))
     {
-        if (!PC->IsInputKeyDown(EKeys::LeftMouseButton)) { StopFire(); return; }
+        if (!(PC->IsInputKeyDown(EKeys::LeftMouseButton) || PC->IsInputKeyDown(EKeys::Gamepad_RightTrigger))) { StopFire(); return; }
     }
-    if (bReloading) return;
+    if (bReloading || PilotView->InTransition() || (bAiming && PilotView->Alpha < .99f) || Parkour()->IsBusy()) return;
     const float Time = GetWorld()->GetTimeSeconds();
     if (Time + .001f < NextShotTime) return;
     if (MagazineAmmo <= 0)
@@ -346,7 +377,7 @@ void AOBPlayerCharacter::FireShot()
     --MagazineAmmo;
     EndSpawnGrace();
     StopSprint();
-    if (Controller) SetActorRotation(FRotator(0, Controller->GetControlRotation().Yaw, 0));
+    // CharacterMovement smoothly turns toward aim; never snap the mesh on a shot.
 
     const FVector CameraStart = FollowCamera->GetComponentLocation();
     const FVector AimDirection = FMath::VRandCone(GetAimDirection(), FMath::DegreesToRadians(bAiming ? AimSpreadDegrees : HipSpreadDegrees));
@@ -382,6 +413,11 @@ void AOBPlayerCharacter::FireShot()
             const float Applied = UGameplayStatics::ApplyPointDamage(Enemy, ShotDamage, (End-Muzzle).GetSafeNormal(), ActualHit, Controller, this, nullptr);
             bEnemyHit = Applied > 0.f;
         }
+    }
+    else if (AOBMachineEnemy* Machine = Cast<AOBMachineEnemy>(ActualHit.GetActor()))
+    {
+        if (!Machine->IsDead())
+            bEnemyHit = UGameplayStatics::ApplyPointDamage(Machine, ShotDamage, (End-Muzzle).GetSafeNormal(), ActualHit, Controller, this, nullptr) > 0.f;
     }
     if (bEnemyHit) LastHitTime = Now;
     DrawShotEffect(ShoulderHit.bBlockingHit ? Shoulder : Muzzle, End, ActualHit.bBlockingHit);
@@ -477,7 +513,8 @@ void AOBPlayerCharacter::UpdateInteraction(float DeltaSeconds)
     {
         PromptAccumulator = 0.f;
         FocusedInteraction = Director->FindInteraction(this);
-        InteractionPrompt = FocusedInteraction.IsValid() ? FocusedInteraction->GetPrompt() : FString();
+        InteractionPrompt = FocusedInteraction.IsValid() ? FocusedInteraction->GetPrompt() :
+            NearbyMech() ? TEXT("E  Enter loader cockpit") : FString();
     }
     if (bInteractHeld && HeldInteraction.IsValid())
     {
@@ -493,14 +530,15 @@ void AOBPlayerCharacter::UpdateInteraction(float DeltaSeconds)
 }
 void AOBPlayerCharacter::StartInteract()
 {
+    if (Parkour()->IsBusy() || PilotView->InTransition()) return;
     if (!IsGameplayActive() || bReloading || !Director.IsValid()) return;
     FocusedInteraction = Director->FindInteraction(this);
-    if (!FocusedInteraction.IsValid()) return;
+    if (!FocusedInteraction.IsValid()) { if (auto* Mech = NearbyMech()) Mech->Board(*this); return; }
     AOBInteractable* Target = FocusedInteraction.Get();
-    const bool bHold = Target->Kind == EOBInteractionKind::Terminal || Target->Kind == EOBInteractionKind::Pod;
-    if (bHold && !GetCharacterMovement()->IsMovingOnGround()) return;
+    // Directors own interaction rules and hold duration, including chapter-specific controls.
+    if (!GetCharacterMovement()->IsMovingOnGround()) return;
     bInteractHeld = true;
-    if (Director->TryInteract(this,Target) && bHold)
+    if (Director->TryInteract(this,Target) && Director->HoldTarget == Target)
     {
         HeldInteraction = Target;
         bInteractionActive = Director->HoldTarget != nullptr;
@@ -508,6 +546,14 @@ void AOBPlayerCharacter::StartInteract()
         GetCharacterMovement()->StopMovementImmediately();
     }
 }
+void AOBPlayerCharacter::GamepadContextPressed()
+{
+    if (!IsGameplayActive() || !Director.IsValid()) return;
+    // Check fresh focus at press time. Never reload after a denied/locked interaction.
+    if (Director->FindInteraction(this) || NearbyMech()) StartInteract();
+    else StartReload();
+}
+void AOBPlayerCharacter::GamepadContextReleased() { ReleaseInteract(); }
 void AOBPlayerCharacter::ReleaseInteract()
 {
     if (const AOBPlayerController* PC = Cast<AOBPlayerController>(Controller))
@@ -526,7 +572,9 @@ void AOBPlayerCharacter::StopInteract()
 
 void AOBPlayerCharacter::ClearHeldInputPreservingInteraction()
 {
+    Parkour()->ResetTraversal();
     StopFire(); StopSprint(); StopAim(); StopJumping();
+    PilotView->ResetView(*this);
     GetCharacterMovement()->StopMovementImmediately();
 }
 void AOBPlayerCharacter::CancelActions()
@@ -535,9 +583,16 @@ void AOBPlayerCharacter::CancelActions()
     CancelReload(); StopInteract();
     InteractionPrompt.Empty();
 }
+void AOBPlayerCharacter::SetCrashPresentation(bool bActive, float RecoveryElapsed)
+{
+    bCrashPresentationActive = bActive;
+    // Keep the last sample for the animation layer's blend out at handoff.
+    if (bActive) CrashRecoveryElapsed = FMath::Max(0.f, RecoveryElapsed);
+}
 void AOBPlayerCharacter::RestoreLoadout(bool bOwned,int32 Magazine,int32 Reserve)
 {
     CancelActions();
+    SetCrashPresentation(false);
     bDead = false;
     Health = MaxHealth;
     CacheArcTuning();
@@ -592,10 +647,17 @@ void AOBPlayerCharacter::ApplyWeaponProfile(EOBWeaponType Weapon)
 void AOBPlayerCharacter::UpdateWeaponVisuals()
 {
     const bool bHelix = bWeaponOwned && EquippedWeapon == EOBWeaponType::Helix12;
+    for (UStaticMeshComponent* Part : {WeaponBody.Get(),WeaponBarrel.Get(),WeaponStrip.Get(),AgentLight.Get()})
+        if (Part) Part->SetVisibility(false);
+    // Fit the HELIX upgrade around Wraith's authored muzzle, whose +X axis is forward.
     for (UStaticMeshComponent* Part : {HelixShroud.Get(),HelixLeftRail.Get(),HelixRightRail.Get(),HelixCell.Get()})
         if (Part) Part->SetVisibility(bHelix);
-    if (MuzzleGlow) MuzzleGlow->SetRelativeLocation(bHelix ? FVector(0,58,3) : WeaponMuzzleOffset);
-    if (WeaponStrip) WeaponStrip->SetVisibility(bWeaponOwned);
+    if (HelixShroud) { HelixShroud->SetRelativeLocation(FVector(-7,0,0)); HelixShroud->SetRelativeScale3D(FVector(.16,.14,.14)); }
+    if (HelixLeftRail) { HelixLeftRail->SetRelativeLocation(FVector(-12,-7,3)); HelixLeftRail->SetRelativeScale3D(FVector(.26,.018,.025)); }
+    if (HelixRightRail) { HelixRightRail->SetRelativeLocation(FVector(-12,7,3)); HelixRightRail->SetRelativeScale3D(FVector(.26,.018,.025)); }
+    if (HelixCell) { HelixCell->SetRelativeLocation(FVector(-22,0,9)); HelixCell->SetRelativeScale3D(FVector(.08,.10,.07)); }
+    if (MuzzleGlow) MuzzleGlow->SetRelativeLocation(FVector::ZeroVector);
+
 }
 bool AOBPlayerCharacter::EquipWeapon(EOBWeaponType Weapon)
 {
@@ -618,6 +680,19 @@ void AOBPlayerCharacter::CycleWeapon() { if(IsGameplayActive() && bHelixOwned) E
 FString AOBPlayerCharacter::GetWeaponName() const { return EquippedWeapon==EOBWeaponType::Helix12?TEXT("HELIX-12 / PLASMA"):TEXT("ARC-9 / BLASTER"); }
 int32 AOBPlayerCharacter::GetArcReserveAmmo() const { return EquippedWeapon==EOBWeaponType::Arc9?ReserveAmmo:ArcReserve; }
 int32 AOBPlayerCharacter::GetHelixReserveAmmo() const { return EquippedWeapon==EOBWeaponType::Helix12?ReserveAmmo:HelixReserve; }
+int32 AOBPlayerCharacter::GetArcMagazineAmmo() const { return EquippedWeapon==EOBWeaponType::Arc9?MagazineAmmo:ArcMagazine; }
+int32 AOBPlayerCharacter::GetHelixMagazineAmmo() const { return EquippedWeapon==EOBWeaponType::Helix12?MagazineAmmo:HelixMagazine; }
+void AOBPlayerCharacter::RestoreCampaignLoadout(bool bArc,int32 ArcMag,int32 InArcReserve,bool bHelix,int32 HelixMag,int32 InHelixReserve,EOBWeaponType Selected)
+{
+    RestoreLoadout(bArc,ArcMag,InArcReserve);
+    // RestoreLoadout deliberately clears inventory; set stored magazines afterwards.
+    ArcMagazine=MagazineAmmo; ArcReserve=ReserveAmmo;
+    bHelixOwned=bArc && bHelix;
+    HelixMagazine=bHelixOwned?FMath::Clamp(HelixMag,0,36):0;
+    HelixReserve=bHelixOwned?FMath::Clamp(InHelixReserve,0,180):0;
+    if (bHelixOwned && Selected==EOBWeaponType::Helix12) EquipWeapon(Selected);
+    UpdateWeaponVisuals();
+}
 void AOBPlayerCharacter::RestoreHeavyWeapon(bool bOwned,int32 Reserve,bool bEquip)
 {
     if (!bOwned || !bWeaponOwned) return;
@@ -650,11 +725,13 @@ float AOBPlayerCharacter::TakeDamage(float Amount,const FDamageEvent& Event,ACon
 }
 void AOBPlayerCharacter::DamagePlayer(float Amount,FVector SourceLocation)
 {
+    if (OccupiedMech.IsValid()) { OccupiedMech->DamageArmor(Amount); return; }
     if (Amount <= 0 || bDead || !IsGameplayActive() || GetWorld()->GetTimeSeconds() < SpawnGraceUntil) return;
     Health = FMath::Clamp(Health - Amount,0.f,MaxHealth);
     LastDamageTime = GetWorld()->GetTimeSeconds();
     DamageDirection = (SourceLocation-GetActorLocation()).GetSafeNormal();
     PlayCue(TEXT("Damage"), .65f);
+    if (Parkour()->IsBusy()) Parkour()->ResetTraversal();
     if (bInteractionActive) StopInteract();
     if (Health <= 0.f)
     {

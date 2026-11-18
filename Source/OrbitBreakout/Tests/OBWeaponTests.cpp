@@ -107,6 +107,7 @@ bool FOBHelixSaveTest::RunTest(const FString& Parameters)
     TestEqual(TEXT("Original ammo enum ordinal stays serialized-compatible"),static_cast<uint8>(EOBInteractionKind::Ammo),static_cast<uint8>(5));
     TestEqual(TEXT("New weapon kind appends after original kinds"),static_cast<uint8>(EOBInteractionKind::HeavyWeapon),static_cast<uint8>(6));
     UOBMissionSave* Snapshot=NewObject<UOBMissionSave>();
+    Snapshot->SchemaVersion=1; // Exercise the historical format explicitly.
     Snapshot->CheckpointId=2;
     Snapshot->ReserveAmmo=96;
     TestTrue(TEXT("Schema-1 checkpoint with default absent weapon fields remains valid"),Snapshot->IsValidSave());

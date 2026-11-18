@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "map": "L_EmergencyDeparture",
+  "routes": 1,
+  "mantle_surfaces": 3,
+  "wall_surfaces": 2,
+  "wraith": "Wraith",
+  "muzzle_socket": true,
+  "position": "<Struct 'Vector' (0x71310e5280) {x: 5070.000000, y: 0.000000, z: 100.000000}>",
+  "magazine": 24,
+  "aiming": false
+}

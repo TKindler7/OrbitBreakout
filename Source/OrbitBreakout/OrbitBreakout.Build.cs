@@ -7,8 +7,9 @@ public class OrbitBreakout : ModuleRules
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
         PublicDependencyModuleNames.AddRange(new string[] {
             "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "AIModule",
-            "NavigationSystem", "GameplayTasks", "UMG", "Slate", "SlateCore", "AnimGraphRuntime"
+            "NavigationSystem", "GameplayTasks", "UMG", "Slate", "SlateCore", "AnimGraphRuntime", "LevelSequence", "MovieScene", "CinematicCamera"
         });
+        PrivateDependencyModuleNames.Add("ApplicationCore");
         if (Target.bBuildEditor)
         {
             // The editor-only integration test owns its PIE lifecycle.

@@ -1,23 +1,42 @@
 #include "../OBCore.h"
 
-#if WITH_DEV_AUTOMATION_TESTS && WITH_EDITOR
+#if WITH_DEV_AUTOMATION_TESTS
 
 #include "../OBEnemyCharacter.h"
 #include "../OBPlayerCharacter.h"
+#include "../OBLevel2.h"
+#include "../OBMachineEnemy.h"
+#include "Camera/PlayerCameraManager.h"
+#include "../OBMech.h"
+#include "../OBParkourMovement.h"
+#include "../OBPilotView.h"
+#include "Components/CapsuleComponent.h"
 #include "../OBUI.h"
 #include "Camera/CameraComponent.h"
-#include "Editor.h"
+#include "Misc/App.h"
+#include "Misc/CommandLine.h"
+#include "Misc/Paths.h"
 #include "Engine/DamageEvents.h"
 #include "Engine/Engine.h"
 #include "Engine/World.h"
+#include "Engine/GameViewportClient.h"
+#include "Engine/LocalPlayer.h"
+#include "GenericPlatform/GenericPlatformInputDeviceMapper.h"
+#include "Tests/AutomationCommon.h"
+#include "Framework/Application/SlateApplication.h"
+#include "Widgets/SViewport.h"
+#include "UnrealClient.h"
 #include "EngineUtils.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "HAL/PlatformTime.h"
 #include "InputKeyEventArgs.h"
 #include "Kismet/GameplayStatics.h"
 #include "Misc/AutomationTest.h"
+#if WITH_EDITOR
+#include "Editor.h"
 #include "PlayInEditorDataTypes.h"
 #include "Settings/LevelEditorPlaySettings.h"
+#endif
 #include "UObject/StrongObjectPtr.h"
 
 // Start and stop our own single-client PIE session with no existing mission save.
@@ -35,14 +54,14 @@ namespace OBMissionTests
     constexpr const TCHAR* SettingsSlot = TEXT("OB_Settings");
     constexpr const TCHAR* MissionMap = TEXT("/Game/OrbitBreakout/Maps/L_EmergencyDeparture.L_EmergencyDeparture");
 
-    UWorld* FindPIEWorld(const UOBGameInstance* Session = nullptr)
+    UWorld* FindCampaignWorld(const UOBGameInstance* Session = nullptr)
     {
         UWorld* Result = nullptr;
         if (!GEngine) return nullptr;
         for (const FWorldContext& Context : GEngine->GetWorldContexts())
         {
             UWorld* World = Context.World();
-            if (!World || World->WorldType != EWorldType::PIE ||
+            if (!World || World->WorldType != (GIsEditor ? EWorldType::PIE : EWorldType::Game) ||
                 (Session && World->GetGameInstance() != Session)) continue;
             if (Result) return nullptr; // Multiple PIE clients need separate isolation.
             Result = World;
@@ -71,7 +90,7 @@ namespace OBMissionTests
             // An editor/process crash cannot execute this cleanup.
             ReleaseCombatInput();
             const bool bNeedsWorldReset = bOwnsMissionSlot && !bRestored;
-            UWorld* World = bNeedsWorldReset && Session.IsValid() ? FindPIEWorld(Session.Get()) : nullptr;
+            UWorld* World = bNeedsWorldReset && Session.IsValid() ? FindCampaignWorld(Session.Get()) : nullptr;
             if (AOBMissionDirector* D = World ? AOBMissionDirector::Get(World) : nullptr)
                 D->SetActorTickEnabled(false); // Prevent an interrupted ending from saving later.
             RestoreSession();
@@ -82,12 +101,12 @@ namespace OBMissionTests
 
         virtual bool Update() override
         {
-            UWorld* World = FindPIEWorld(Session.Get());
+            UWorld* World = FindCampaignWorld(Session.Get());
             AOBMissionDirector* D = World ? AOBMissionDirector::Get(World) : nullptr;
             AOBPlayerController* PC = World ? Cast<AOBPlayerController>(UGameplayStatics::GetPlayerController(World, 0)) : nullptr;
             AOBPlayerCharacter* P = D ? D->Player.Get() : nullptr;
             const double Now = FPlatformTime::Seconds();
-            if (Now - StageStarted > 30.0)
+            if (Now - StageStarted > (Stage == EStage::Tunnel ? 260.0 : (Stage == EStage::CrashControl || Stage == EStage::Reopened) ? 100.0 : 60.0))
             {
                 Test->AddError(FString::Printf(TEXT("PIE mission stage %d timed out"), static_cast<int32>(Stage)));
                 if (Stage == EStage::Cleanup) return true;
@@ -100,6 +119,8 @@ namespace OBMissionTests
                 return true;
             }
             if (!World || !D || !P || !PC) return false;
+            if (bOwnsMissionSlot && !GIsEditor && FParse::Param(FCommandLine::Get(), TEXT("OBRecordCheckpoints")))
+                RecordCheckpoint();
             if (Stage == EStage::Cleanup)
             {
                 if (World == TravelWorld.Get() || PC->MenuScreen != TEXT("Main")) return false;
@@ -201,6 +222,8 @@ namespace OBMissionTests
                 // SetControlRotation takes effect on a later camera tick. Wait
                 // for all three unobstructed traces before injecting fire.
                 if (!WeaponTraceReachesTarget(World, P)) return false;
+                if (FParse::Param(FCommandLine::Get(),TEXT("OBLoaderReview")))
+                    FScreenshotRequest::RequestScreenshot(TEXT("PilotArcSight.png"),true,false);
                 Test->TestTrue(TEXT("Simulated aim input reaches the character's aiming state"), P->bAiming);
                 Test->AddInfo(TEXT("Input shooting fixture has camera-to-target, shoulder-to-muzzle and muzzle-to-impact visibility."));
                 PC->InputKey(FInputKeyEventArgs::CreateSimulated(EKeys::LeftMouseButton, IE_Pressed, 1.f));
@@ -396,15 +419,38 @@ namespace OBMissionTests
                 break;
 
             case EStage::Ending:
-                if (D->Phase != EOBPhase::Complete) return false;
-                Test->TestTrue(TEXT("Ending runs its natural nine-second duration"), D->GetEndingElapsed() >= 9.f);
-                Test->TestTrue(TEXT("Ending moves the escape pod"), Interaction.IsValid() && Interaction->GetActorLocation().X > PodStart.X + 3000.f);
-                Test->TestEqual(TEXT("Ending displays Complete screen"), PC->MenuScreen, FName(TEXT("Complete")));
-                CheckDisk(2, true);
-                PC->PerformAction(TEXT("Settings"));
-                PC->PerformAction(TEXT("Back"));
-                Test->TestEqual(TEXT("Completion Settings returns to Complete"), PC->MenuScreen, FName(TEXT("Complete")));
-                Cleanup(World);
+                if (auto* Tunnel = Cast<AOBLevel2Director>(D))
+                {
+                    if (!Tunnel->IsCinematicActive() && !Tunnel->IsGameplayActive()) return false;
+                    Test->TestTrue(TEXT("Departure reaches the authored tunnel map"), World->GetMapName().EndsWith(TEXT("L_DeadSignal")));
+                    Test->TestFalse(TEXT("Handoff stays in the campaign save slot"), Session->bDevelopmentChapterSession);
+                    Test->TestEqual(TEXT("Handoff selects chapter two"), Session->MissionSave->ChapterId, 2);
+                    Test->TestTrue(TEXT("Crash retains the pilot and loadout"), P->bWeaponOwned);
+                    Advance(EStage::CrashControl);
+                }
+                else if (D->GetEndingElapsed() > 8.f && Interaction.IsValid())
+                    Test->TestTrue(TEXT("Departure moves the Star Sparrow"), Interaction->GetActorLocation().X > PodStart.X + 2000.f);
+                break;
+            case EStage::CrashControl:
+                if (!D->IsGameplayActive()) return false;
+                Test->TestTrue(TEXT("Natural crash returns the pilot camera"), PC->GetViewTarget()==P);
+                CheckDisk(0,false);
+                Session->ReturnToMenu();
+                Advance(EStage::Reopen);
+                break;
+            case EStage::Reopen:
+                if (PC->MenuScreen != TEXT("Main")) return false;
+                Session->ContinueMission();
+                Advance(EStage::Reopened);
+                break;
+            case EStage::Reopened:
+                if (!Cast<AOBLevel2Director>(D) || !D->IsGameplayActive()) return false;
+                Test->TestEqual(TEXT("Continue reopens the tunnel checkpoint"),Session->MissionSave->CheckpointKey,FName(TEXT("L2.Crash")));
+                Test->AddInfo(TEXT("Tunnel traversal uses authored zone entries, positioned interactions, simulated hold durations and normal damage to active machines."));
+                Advance(EStage::Tunnel);
+                break;
+            case EStage::Tunnel:
+                if (DriveTunnel(*CastChecked<AOBLevel2Director>(D),*P,*PC)) Cleanup(World);
                 break;
 
             default: break;
@@ -417,7 +463,7 @@ namespace OBMissionTests
             AimAtTrooper, ShootTrooper, ReleaseFire, ReleasedFireStable,
             CargoCheckpoint, CargoBeforeDeath, DeathScreen, CargoRetry, CargoAgain,
             PausedWave, Reinforcements, Terminal, ReactorCheckpoint, ReactorRetry,
-            Reactor, PodBay, BoardPod, Ending, Cleanup };
+            Reactor, PodBay, BoardPod, Ending, CrashControl, Reopen, Reopened, Tunnel, Cleanup };
         FAutomationTestBase* Test;
         TWeakObjectPtr<UOBGameInstance> Session;
         TStrongObjectPtr<UOBMissionSave> OriginalSave;
@@ -442,13 +488,214 @@ namespace OBMissionTests
         double StageStarted;
         double GameTime = 0.0;
         FVector PodStart = FVector::ZeroVector;
+        TArray<float> UplinkFrameMilliseconds;
 
         void Advance(EStage Next) { Stage = Next; StageStarted = FPlatformTime::Seconds(); }
+
+        TSet<FName> RecordedCheckpoints;
+        bool bLoaderFight = false;
+        bool bPulsePressed = false;
+        bool bCockpitCaptured = false;
+        float NextPulseTime = 0.f;
+        float HealthAtBoard = 0.f;
+        int32 AmmoAtBoard = 0;
+        float FightStarted = 0.f;
+        float LastFightSample = 0.f;
+
+
+        void RecordCheckpoint()
+        {
+            const UOBMissionSave* Save = Session->MissionSave;
+            if (!Save || RecordedCheckpoints.Contains(Save->CheckpointKey) || Save->bPendingChapter2 ||
+                Save->bMissionCompleted || (Save->ChapterId == 2 && !Save->bLevel2IntroComplete)) return;
+            TArray<uint8> Bytes;
+            if (!UGameplayStatics::LoadDataFromSlot(Bytes, MissionSlot, 0)) return;
+            const auto* Disk = Cast<UOBMissionSave>(UGameplayStatics::LoadGameFromMemory(Bytes));
+            if (!Disk || Disk->CheckpointKey != Save->CheckpointKey || !Disk->IsValidSave()) return;
+            const FString Backup = TEXT("Review_") + Disk->CheckpointKey.ToString();
+            if (Test->TestTrue(TEXT("Archive checkpoint bytes for cold boot"), UGameplayStatics::SaveDataToSlot(Bytes, Backup, 0)))
+                RecordedCheckpoints.Add(Disk->CheckpointKey);
+        }
 
         bool DoorOpen(AOBMissionDirector* D, int32 Id) const
         {
             for (AOBDoor* Door : D->Doors)
                 if (IsValid(Door) && Door->DoorId == Id) return Door->bOpen;
+            return false;
+        }
+
+        bool DriveTunnel(AOBLevel2Director& D,AOBPlayerCharacter& P,AOBPlayerController& PC)
+        {
+            if (PC.MenuScreen == TEXT("Complete"))
+            {
+                if (!UplinkFrameMilliseconds.IsEmpty())
+                {
+                    UplinkFrameMilliseconds.Sort();
+                    const int32 Last = UplinkFrameMilliseconds.Num() - 1;
+                    Test->AddInfo(FString::Printf(TEXT("Rendered uplink automation tick samples: %d, median %.2f ms, p95 %.2f ms"),
+                        Last + 1, UplinkFrameMilliseconds[Last / 2], UplinkFrameMilliseconds[FMath::RoundToInt(Last * .95f)]));
+                }
+                Test->TestEqual(TEXT("Exactly thirteen finale combatants spawned"),D.FinaleSpawned,13);
+                Test->TestTrue(TEXT("Campaign saves the rescue response"),Session->MissionSave->bLevel2Completed);
+                CheckDisk(3,true);
+                return true;
+            }
+            if (PC.MenuScreen == TEXT("Dead")) { Test->AddError(TEXT("Campaign driver died in tunnel")); return true; }
+            if (D.IsCinematicActive() || !D.IsGameplayActive()) return false;
+            for (AOBMachineEnemy* Enemy : D.Machines)
+                if (IsValid(Enemy) && Enemy->bActive && !Enemy->IsDead() && !(bLoaderFight && Enemy->EncounterId==207))
+                    Enemy->TakeDamage(100000.f,FDamageEvent(),&PC,&P);
+            const auto Move = [&](FVector Position)
+            {
+                P.GetCharacterMovement()->StopMovementImmediately();
+                P.SetActorLocation(Position,false,nullptr,ETeleportType::TeleportPhysics);
+                P.GetCharacterMovement()->SetMovementMode(MOVE_Walking);
+            };
+            const auto Zone = [&](int32 Number,FVector Position)
+            {
+                Move(Position);
+                PC.SetControlRotation(FRotator(0,180,0));
+                D.EnterZone(Number,false);
+            };
+            const auto Use = [&](EOBLevel2Action Action)
+            {
+                if (!D.IsActionAvailable(Action)) return;
+                for (AOBInteractable* Item : D.Interactions)
+                {
+                    auto* Control=Cast<AOBLevel2Interactable>(Item);
+                    if (!Control || Control->Action!=Action) continue;
+                    // Consoles face different walls. Try accessible sides and let the director
+                    // validate distance, facing and visibility before a hold can complete.
+                    for (FVector Side : {FVector(-1,0,0),FVector(0,-1,0),FVector(1,0,0),FVector(0,1,0)})
+                    {
+                        FVector Position=Control->GetActorLocation()+Side*155.f;
+                        FHitResult Floor;
+                        FCollisionQueryParams Probe(SCENE_QUERY_STAT(OBCampaignFloor),false,&P);
+                        if (!P.GetWorld()->LineTraceSingleByChannel(Floor,Position+FVector(0,0,180),Position-FVector(0,0,300),ECC_Pawn,Probe)
+                            || !P.GetCharacterMovement()->IsWalkable(Floor)) continue;
+                        Position.Z=Floor.ImpactPoint.Z+P.GetCapsuleComponent()->GetScaledCapsuleHalfHeight()+3.f;
+                        if (P.GetWorld()->OverlapBlockingTestByChannel(Position,FQuat::Identity,ECC_Pawn,
+                            P.GetCapsuleComponent()->GetCollisionShape(),FCollisionQueryParams(SCENE_QUERY_STAT(OBCampaignUse),false,&P))) continue;
+                        Move(Position); PC.SetControlRotation((-Side).Rotation());
+                        PC.PlayerCameraManager->UpdateCamera(.02f);
+                        if (!D.TryInteract(&P,Control)) continue;
+                        if (D.HoldTarget==Control)
+                        {
+                            P.bInteractHeld=true;
+                            D.UpdateHold(&P,Control,FMath::Max(2.1f,Control->HoldSeconds+.1f));
+                            P.bInteractHeld=false;
+                        }
+                        return;
+                    }
+                }
+            };
+            if (D.CurrentZone<2) Zone(2,FVector(2350,0,102));
+            else if (D.CurrentZone<3 && D.IsEncounterCleared(202)) Zone(3,FVector(6000,3500,145));
+            else if (D.CurrentZone==3)
+            {
+                if (!D.bJunctionIsolated) Use(EOBLevel2Action::Breaker);
+                else if (!D.bJunctionDrained) Use(EOBLevel2Action::Pump);
+                else Zone(4,FVector(9700,3000,102));
+            }
+            else if (D.CurrentZone==4 && D.IsEncounterCleared(205)) Zone(5,FVector(12200,6000,104));
+            else if (D.CurrentZone==5)
+            {
+                if (!D.bCouplerOwned) Use(EOBLevel2Action::Coupler);
+                else if (!D.bCouplerInserted) Use(EOBLevel2Action::Socket);
+                else if (!D.bAuxPowerRestored) Use(EOBLevel2Action::Power);
+                else
+                {
+                    Zone(6,FVector(17000,6950,102));
+                    auto* Loader=D.WardenMech.Get();
+                    if (!Test->TestNotNull(TEXT("Authored Warden bay contains the loader"),Loader)) return true;
+                    const FVector Dock=Loader->GetActorLocation();
+                    Move(FVector(Dock.X-160,Dock.Y,100));
+                    const float Health=P.Health;
+                    const int32 Ammo=P.MagazineAmmo;
+                    // Square uses the same contextual dispatch as a DualSense.
+                    PC.InputKey(FInputKeyEventArgs::CreateSimulated(EKeys::Gamepad_FaceButton_Left,IE_Pressed,1.f));
+                    PC.InputKey(FInputKeyEventArgs::CreateSimulated(EKeys::Gamepad_FaceButton_Left,IE_Released,0.f));
+                    if (!Test->TestTrue(TEXT("Square boards the Warden loader"),PC.GetPawn()==Loader && PC.GetViewTarget()==Loader)) return true;
+                    PC.InputKey(FInputKeyEventArgs::CreateSimulated(EKeys::Gamepad_FaceButton_Left,IE_Pressed,1.f));
+                    PC.InputKey(FInputKeyEventArgs::CreateSimulated(EKeys::Gamepad_FaceButton_Left,IE_Released,0.f));
+                    Test->TestTrue(TEXT("Square exits and preserves inventory"),PC.GetPawn()==&P && P.Health==Health && P.MagazineAmmo==Ammo);
+                    if (FParse::Param(FCommandLine::Get(),TEXT("OBLoaderReview")))
+                    {
+                        HealthAtBoard=Health; AmmoAtBoard=Ammo;
+                        bLoaderFight=Loader->Board(P);
+                        if (!Test->TestTrue(TEXT("Loader can reboard for the Warden fight"),bLoaderFight)) return true;
+                        FightStarted=D.GetWorld()->GetTimeSeconds();
+                    }
+                }
+            }
+            else if (D.CurrentZone==6 && bLoaderFight && !D.bWardenDefeated)
+            {
+                AOBMech* Loader = Cast<AOBMech>(PC.GetPawn());
+                if (!Test->TestNotNull(TEXT("Cockpit survives live Warden combat"),Loader)) return true;
+                const float Now=D.GetWorld()->GetTimeSeconds();
+                if (Now-FightStarted>75.f) { Test->AddError(TEXT("Loader could not defeat Warden within 75 seconds")); return true; }
+                if (bPulsePressed && Now >= NextPulseTime - .30f)
+                {
+                    PC.InputKey(FInputKeyEventArgs::CreateSimulated(EKeys::Gamepad_RightTrigger,IE_Released,0.f));
+                    bPulsePressed=false;
+                }
+                for (AOBMachineEnemy* Enemy : D.Machines)
+                {
+                    if (!IsValid(Enemy) || !Enemy->bActive || Enemy->EncounterId!=207 || Enemy->IsDead()) continue;
+                    FVector Eye; FRotator Rotation;
+                    PC.GetPlayerViewPoint(Eye,Rotation);
+                    PC.SetControlRotation((Enemy->GetActorLocation()-Eye).Rotation());
+                    if (!bCockpitCaptured && Now-FightStarted>.8f)
+                    {
+                        FScreenshotRequest::RequestScreenshot(TEXT("LoaderCockpit.png"),true,false);
+                        bCockpitCaptured=true;
+                    }
+                    // Save heat for the exposed core instead of dumping every burst into the shield.
+                    // Move sideways during the telegraph using the normal, bounded movement binding.
+                    const float Dodge = Enemy->State == EOBMachineState::PulseWarning
+                        ? (FMath::Fmod(Now-FightStarted,8.f)<4.f ? 1.f : -1.f) : 0.f;
+                    PC.InputKey(FInputKeyEventArgs::CreateSimulated(EKeys::Gamepad_LeftX,IE_Axis,Dodge,1));
+                    if (Now-LastFightSample >= 5.f)
+                    {
+                        UE_LOG(LogTemp,Display,TEXT("OB_LOADER_COMBAT warden=%.0f armor=%.0f heat=%.0f"),Enemy->Health,Loader->Armor,Loader->Heat);
+                        LastFightSample=Now;
+                    }
+                    const bool bAttackWindow = Enemy->IsCoreExposed() || Loader->Heat < 8.f;
+                    if (!bPulsePressed && Now>=NextPulseTime && bAttackWindow &&
+                        Loader->Heat + Loader->HeatPerShot < 99.f && !Loader->bOverheated)
+                    {
+                        PC.InputKey(FInputKeyEventArgs::CreateSimulated(EKeys::Gamepad_RightTrigger,IE_Pressed,1.f));
+                        bPulsePressed=true; NextPulseTime=Now+.56f;
+                    }
+                    break;
+                }
+            }
+            else if (D.CurrentZone==6 && D.bWardenDefeated)
+            {
+                if (bLoaderFight)
+                {
+                    if (PC.GetPawn()!=&P) return false;
+                    PC.InputKey(FInputKeyEventArgs::CreateSimulated(EKeys::Gamepad_LeftX,IE_Axis,0.f,1));
+                    PC.InputKey(FInputKeyEventArgs::CreateSimulated(EKeys::Gamepad_RightTrigger,IE_Released,0.f));
+                    Test->TestTrue(TEXT("Live Warden resolved with cockpit cannon and safe dismount"),
+                        P.Health==HealthAtBoard && P.MagazineAmmo==AmmoAtBoard && !P.OccupiedMech.IsValid());
+                    Test->AddInfo(TEXT("Warden defeated using simulated R2 and normal cockpit cannon damage"));
+                }
+                Zone(7,FVector(19250,9500,102));
+            }
+            else if (D.CurrentZone==7)
+            {
+                if (D.IsUplinkActive() && !D.IsUplinkPaused())
+                    UplinkFrameMilliseconds.Add(1000.f * FApp::GetDeltaTime());
+                if (!D.bStabilizerA || D.IsUplinkPaused()) Use(EOBLevel2Action::StabilizerA);
+                else if (!D.bStabilizerB) Use(EOBLevel2Action::StabilizerB);
+                else if (D.IsActionAvailable(EOBLevel2Action::Transmitter)) Use(EOBLevel2Action::Transmitter);
+                else
+                {
+                    // Turn away from marked security entries so their real visibility guards can release the wave.
+                    PC.SetControlRotation(FRotator(0,FMath::Fmod(D.GetWorld()->GetTimeSeconds()*70.f,360.f),0));
+                }
+            }
             return false;
         }
 
@@ -688,6 +935,7 @@ namespace OBMissionTests
 
     // Automation may end an existing PIE session before RunTest is invoked.
     // Own the complete PIE lifecycle instead of depending on a user's session.
+#if WITH_EDITOR
     class FOwnedPIECommand final : public IAutomationLatentCommand
     {
     public:
@@ -757,7 +1005,7 @@ namespace OBMissionTests
             }
             case EStage::WaitForMain:
             {
-                UWorld* World = FindPIEWorld();
+                UWorld* World = FindCampaignWorld();
                 UOBGameInstance* Session = World ? Cast<UOBGameInstance>(World->GetGameInstance()) : nullptr;
                 AOBPlayerController* PC = World ? Cast<AOBPlayerController>(UGameplayStatics::GetPlayerController(World, 0)) : nullptr;
                 AOBMissionDirector* D = World ? AOBMissionDirector::Get(World) : nullptr;
@@ -829,8 +1077,10 @@ namespace OBMissionTests
             Advance(EStage::StopPIE);
         }
     };
+#endif
 }
 
+#if WITH_EDITOR
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FOBMissionPIETest,
     "OrbitBreakout.Mission.PIE.ProgressionAndRecovery",
     EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter)
@@ -848,4 +1098,182 @@ bool FOBMissionPIETest::RunTest(const FString& Parameters)
     return true;
 }
 
-#endif // WITH_DEV_AUTOMATION_TESTS && WITH_EDITOR
+#else
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FOBPackagedCampaignTest,
+    "OrbitBreakout.Package.Campaign",
+    EAutomationTestFlags::ClientContext | EAutomationTestFlags::ProductFilter)
+
+bool FOBPackagedCampaignTest::RunTest(const FString& Parameters)
+{
+    FString UserDir;
+    if (!FParse::Param(FCommandLine::Get(), TEXT("OBIsolatedCampaignTest")) ||
+        !FParse::Value(FCommandLine::Get(), TEXT("UserDir="), UserDir) || UserDir.IsEmpty() ||
+        !FPaths::IsUnderDirectory(FPaths::ConvertRelativePathToFull(FPaths::ProjectSavedDir()),
+                                  FPaths::ConvertRelativePathToFull(UserDir)))
+    {
+        AddError(TEXT("The package campaign test needs an explicit isolated -UserDir and -OBIsolatedCampaignTest."));
+        return false;
+    }
+    UWorld* World = OBMissionTests::FindCampaignWorld();
+    auto* Session = World ? Cast<UOBGameInstance>(World->GetGameInstance()) : nullptr;
+    if (!Session || !Session->bFrontEnd || Session->HasValidSave() ||
+        UGameplayStatics::DoesSaveGameExist(OBMissionTests::MissionSlot, 0))
+    {
+        AddError(TEXT("The package campaign test requires the main menu and a fresh mission slot."));
+        return false;
+    }
+    FAutomationTestFramework::Get().EnqueueLatentCommand(
+        MakeShared<OBMissionTests::FProgressionCommand>(this, Session));
+    return true;
+}
+
+namespace OBMissionTests
+{
+    bool StageNextCheckpoint(FAutomationTestBase& Test)
+    {
+        FString Next;
+        if (!FParse::Value(FCommandLine::Get(), TEXT("OBNextCheckpoint="), Next)) return true;
+        TArray<uint8> Bytes;
+        if (!Test.TestTrue(TEXT("Recorded gameplay snapshot exists"), UGameplayStatics::LoadDataFromSlot(Bytes, TEXT("Review_") + Next, 0)))
+            return false;
+        const auto* Disk = Cast<UOBMissionSave>(UGameplayStatics::LoadGameFromMemory(Bytes));
+        if (!Test.TestTrue(TEXT("Recorded checkpoint matches requested identity"), Disk && Disk->IsValidSave() && Disk->CheckpointKey.ToString() == Next))
+            return false;
+        return Test.TestTrue(TEXT("Next process receives the archived save"), UGameplayStatics::SaveDataToSlot(Bytes, MissionSlot, 0));
+    }
+
+    class FColdResume final : public IAutomationLatentCommand
+    {
+    public:
+        FColdResume(FAutomationTestBase& InTest, UOBGameInstance& InSession)
+            : Test(InTest), Session(&InSession), Deadline(FPlatformTime::Seconds()+65.0) {}
+
+        bool Update() override
+        {
+            if (!Session.IsValid() || FPlatformTime::Seconds() > Deadline)
+            {
+                Test.AddError(TEXT("Cold Continue did not restore playable control in time"));
+                return true;
+            }
+            UWorld* W = FindCampaignWorld(Session.Get());
+            auto* D = W ? AOBMissionDirector::Get(W) : nullptr;
+            auto* PC = W ? Cast<AOBPlayerController>(UGameplayStatics::GetPlayerController(W,0)) : nullptr;
+            if (!D || !PC || !D->Player || !D->IsGameplayActive() || PC->IsMenuOpen()) return false;
+            auto* P = D->Player.Get();
+            const auto* S = Session->MissionSave.Get();
+            const int32 Id = S->CheckpointId;
+            FVector Spawn = D->StartLocation;
+            if (S->ChapterId == 2)
+            {
+                auto* L = Cast<AOBLevel2Director>(D);
+                if (!Test.TestNotNull(TEXT("Tunnel director restored"),L)) return true;
+                const FVector Entries[] = {Spawn,L->JunctionCheckpoint,L->PowerCheckpoint,L->FinaleCheckpoint};
+                Spawn = Entries[Id];
+                Test.TestEqual(TEXT("Tunnel checkpoint"),L->Checkpoint,Id);
+                Test.TestEqual(TEXT("Saved rifle magazine"),P->GetArcMagazineAmmo(),S->ArcMagazine);
+                Test.TestEqual(TEXT("Saved HELIX magazine"),P->GetHelixMagazineAmmo(),S->HelixMagazine);
+                Test.TestEqual(TEXT("Auxiliary power"),L->bAuxPowerRestored,S->bAuxPowerRestored);
+                Test.TestEqual(TEXT("Warden gate"),L->bWardenDefeated,S->bWardenDefeated);
+            }
+            else
+            {
+                const FVector Entries[] = {Spawn,D->CargoCheckpointLocation,D->ReactorCheckpointLocation};
+                Spawn = Entries[Id];
+                Test.TestEqual(TEXT("Chapter 1 weapon availability"),P->bWeaponOwned,Id>0);
+                Test.TestTrue(TEXT("Chapter 1 phase"),D->Phase == (Id==2 ? EOBPhase::Reactor : Id==1 ? EOBPhase::Cargo : EOBPhase::Cell));
+            }
+            Test.TestTrue(TEXT("Checkpoint places the capsule at the authored spawn"),
+                FVector::Dist2D(Spawn,P->GetActorLocation())<60 && FMath::Abs(Spawn.Z-P->GetActorLocation().Z)<115);
+            Test.TestTrue(TEXT("Wraith owns the view and controls"),PC->GetPawn()==P && PC->GetViewTarget()==P);
+            Test.TestTrue(TEXT("Aim, traversal and cockpit released"),!P->bAiming && P->PilotView->Alpha==0.f &&
+                !P->OccupiedMech.IsValid() && !P->Parkour()->IsBusy());
+            Test.AddInfo(TEXT("Cold Continue restored ") + S->CheckpointKey.ToString());
+            StageNextCheckpoint(Test);
+            return true;
+        }
+    private:
+        FAutomationTestBase& Test;
+        TWeakObjectPtr<UOBGameInstance> Session;
+        double Deadline;
+    };
+}
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FOBColdBootTest,"OrbitBreakout.Package.ColdResume",
+    EAutomationTestFlags::ClientContext | EAutomationTestFlags::ProductFilter)
+bool FOBColdBootTest::RunTest(const FString&)
+{
+    FString Root;
+    if (!FParse::Param(FCommandLine::Get(),TEXT("OBIsolatedCampaignTest")) ||
+        !FParse::Value(FCommandLine::Get(),TEXT("UserDir="),Root) || !FPaths::GetCleanFilename(Root).StartsWith(TEXT("OrbitPilotReview-")) ||
+        !FPaths::IsUnderDirectory(FPaths::ConvertRelativePathToFull(FPaths::ProjectSavedDir()),FPaths::ConvertRelativePathToFull(Root)))
+    {
+        AddError(TEXT("Cold-boot checks require an isolated review profile"));
+        return false;
+    }
+    auto* W = OBMissionTests::FindCampaignWorld();
+    auto* GI = W ? Cast<UOBGameInstance>(W->GetGameInstance()) : nullptr;
+    auto* PC = W ? Cast<AOBPlayerController>(UGameplayStatics::GetPlayerController(W,0)) : nullptr;
+    if (!TestTrue(TEXT("Fresh process reached Main"),GI && PC && GI->bFrontEnd && PC->MenuScreen==TEXT("Main"))) return false;
+    FString Expected;
+    if (!FParse::Value(FCommandLine::Get(),TEXT("OBExpectedCheckpoint="),Expected))
+        return OBMissionTests::StageNextCheckpoint(*this);
+    if (!TestTrue(TEXT("Fresh process read the expected checkpoint from disk"),
+        GI->HasValidSave() && GI->MissionSave->CheckpointKey.ToString()==Expected)) return false;
+    PC->PerformAction(TEXT("Continue"));
+    FAutomationTestFramework::Get().EnqueueLatentCommand(MakeShared<OBMissionTests::FColdResume>(*this,*GI));
+    return true;
+}
+
+// Send events at the same Slate entry point as the Apple controller backend.
+// Calling PlayerController::InputKey directly would skip the focus regression.
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FOBGamepadFocusTest,"OrbitBreakout.Package.GamepadFocus",
+    EAutomationTestFlags::ClientContext | EAutomationTestFlags::ProductFilter)
+bool FOBGamepadFocusTest::RunTest(const FString&)
+{
+    FString Root;
+    if (!FParse::Value(FCommandLine::Get(),TEXT("UserDir="),Root) ||
+        !FPaths::GetCleanFilename(Root).StartsWith(TEXT("OrbitPilotReview-")) ||
+        !FPaths::IsUnderDirectory(FPaths::ConvertRelativePathToFull(FPaths::ProjectSavedDir()),FPaths::ConvertRelativePathToFull(Root)))
+    {
+        AddError(TEXT("Gamepad focus test requires a temporary review profile"));
+        return false;
+    }
+    auto* W=OBMissionTests::FindCampaignWorld();
+    auto* PC=W ? Cast<AOBPlayerController>(W->GetFirstPlayerController()) : nullptr;
+    if (!TestTrue(TEXT("Main menu ready"),PC && PC->MenuScreen==TEXT("Main") && PC->GetLocalPlayer())) return false;
+    const FPlatformUserId User=PC->GetLocalPlayer()->GetPlatformUserId();
+    const FInputDeviceId Device=IPlatformInputDeviceMapper::Get().GetPrimaryInputDeviceForUser(User);
+    const auto Tap=[User,Device](FKey Key)
+    {
+        auto& Slate=FSlateApplication::Get();
+        Slate.OnControllerButtonPressed(Key.GetFName(),User,Device,false);
+        Slate.OnControllerButtonReleased(Key.GetFName(),User,Device,false);
+    };
+    const TWeakObjectPtr<AOBPlayerController> Player=PC;
+    auto View=W->GetGameViewport()->GetGameViewportWidget();
+    if (!TestTrue(TEXT("Main has viewport focus before a mouse click"), View.IsValid() && View->HasAnyUserFocus().IsSet())) return false;
+    PC->SetMouseLocation(2,2);
+    FSlateApplication::Get().ClearAllUserFocus(EFocusCause::Cleared);
+    PC->ShowScreen(TEXT("Controls"));
+    ADD_LATENT_AUTOMATION_COMMAND(FWaitLatentCommand(.25f));
+    ADD_LATENT_AUTOMATION_COMMAND(FFunctionLatentCommand([this,Player,View,Tap]()
+    {
+        if (!TestTrue(TEXT("Menu transition restores viewport focus"),Player.IsValid() && View->HasAnyUserFocus().IsSet())) return true;
+        Tap(EKeys::Gamepad_FaceButton_Right);
+        TestEqual(TEXT("Circle returns to Main through Slate"),Player->MenuScreen,FName(TEXT("Main")));
+        return true;
+    }));
+    ADD_LATENT_AUTOMATION_COMMAND(FWaitLatentCommand(.25f));
+    ADD_LATENT_AUTOMATION_COMMAND(FFunctionLatentCommand([this,Player,Tap]()
+    {
+        if (!Player.IsValid() || Player->MenuScreen!=TEXT("Main")) return true;
+        Tap(EKeys::Gamepad_DPad_Up);
+        Tap(EKeys::Gamepad_LeftStick_Up);
+        Tap(EKeys::Gamepad_FaceButton_Bottom);
+        TestEqual(TEXT("D-pad, left stick and Cross select Controls"),Player->MenuScreen,FName(TEXT("Controls")));
+        return true;
+    }));
+    return true;
+}
+#endif // WITH_EDITOR
+#endif // WITH_DEV_AUTOMATION_TESTS

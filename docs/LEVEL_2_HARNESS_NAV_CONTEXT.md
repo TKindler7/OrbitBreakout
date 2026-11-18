@@ -1,0 +1,15 @@
+# Editor navigation call context
+
+The final trooper mission smoke encountered one handled editor ensure at `2026-11-13 21:25:49.548 UTC`, while approaching `L2_CrashSupplies` after the opening cinematic and six-second grace interval. The report's functional assertions do not inspect the editor log, so its result must be read alongside this note. The full smoke report remains unchanged.
+
+Log: `/Users/teddykindler/Library/Logs/Unreal Engine/OrbitBreakoutEditor/OrbitBreakout.log`, lines 2455–2494 in that editor session. The condition was `false || !HasAnyFlags(RF_ClassDefaultObject)`, from `NavigationSystem.h:293`. The stack entered `UNavigationSystemV1::GetWorld`, `UEngine::GetWorldFromContextObject`, `UEditorEngine::OnScriptExecutionStart`, and Python's generated class-function wrapper. No machine-combat call appears in that stack. The ensure was handled; navigation queries and subsequent physical mission traversal continued.
+
+The triggering harness path is `interact('L2_CrashSupplies')` → `nav_point(candidate)` → `unreal.NavigationSystemV1.project_point_to_navigation(world, ...)`. The supplied world is valid. However, Python's static wrapper calls `ProcessEvent` on the navigation class default object. UE 5.8's editor script-start world switching asks that object for its world before the static function executes. `UNavigationSystemV1` is declared `Within=World`, and its generated world getter rejects the class default object.
+
+`Scripts/probe_dead_signal_nav_context.py` tests the narrow harness remedy: select the existing navigation object whose outer is the PIE world, then invoke the same reflected native functions through that object's `call_method`. This preserves the correct script context without changing actors, collision, navigation data or gameplay. It runs once on a Slate callback and writes `Saved/Level2/NAV_PYTHON_CONTEXT_PROBE.json`.
+
+The independent probe passed at `2026-11-13 21:31:55.170 UTC`: both unchanged maintenance-floor points projected successfully, and the query returned a valid, complete two-point path. The bound object was the PIE world's `NavigationSystemV1_0`. The editor-log span between `OB_NAV_PYTHON_CONTEXT_PROBE_BEGIN` and `OB_NAV_PYTHON_CONTEXT_PROBE_END PASS` contains no new ensure or error.
+
+After that probe, `Scripts/playtest_dead_signal.py` was updated to use the proven object-bound calls for projection and synchronous path queries. The helper reacquires the navigation system when checkpoint retry replaces the PIE world. This is a harness binding change only; no native/gameplay code or assets changed. Python syntax validation passed.
+
+The full trooper mission's 114/114-check pass in 360.83 seconds predates this harness-only edit and includes the handled ensure documented above. That report is preserved byte-for-byte at `Saved/Level2/RUNTIME_SMOKE.json` (SHA-256 `e060187f8fec025cacf408915ff72bc3f094f084e1acb512f39db1fe92e5b6e0`). The isolated probe verifies the corrected navigation binding; the entire mission was not rerun solely for this editor-harness change.

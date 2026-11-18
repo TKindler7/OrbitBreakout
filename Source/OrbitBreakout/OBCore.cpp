@@ -1,4 +1,5 @@
 #include "OBCore.h"
+#include "OBTraversalRoute.h"
 #include "OBPlayerCharacter.h"
 #include "OBEnemyCharacter.h"
 #include "OBUI.h"
@@ -15,16 +16,20 @@
 #include "EngineUtils.h"
 #include "Engine/Engine.h"
 #include "Engine/World.h"
+#include "Engine/StaticMesh.h"
 #include "Engine/DamageEvents.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Sound/SoundBase.h"
 #include "TimerManager.h"
 #include "UObject/ConstructorHelpers.h"
+#include "Misc/PackageName.h"
 
 namespace OB {
  static const FString MissionSlot(TEXT("OB_EmergencyDeparture"));
  static const FString SettingsSlot(TEXT("OB_Settings"));
  static const FName MissionMap(TEXT("/Game/OrbitBreakout/Maps/L_EmergencyDeparture"));
+ static const FName Level2Map(TEXT("/Game/OrbitBreakout/Maps/L_DeadSignal"));
+ static const FString DevelopmentSlot(TEXT("OB_DeadSignal_Development"));
  static UStaticMesh* Shape(const TCHAR* Name) { return LoadObject<UStaticMesh>(nullptr,*FString::Printf(TEXT("/Engine/BasicShapes/%s.%s"),Name,Name)); }
  static void Paint(UStaticMeshComponent* Mesh,FLinearColor Color,bool Glow=false) {
   auto* Material=LoadObject<UMaterialInterface>(nullptr,Glow?TEXT("/Game/OrbitBreakout/Materials/M_Emissive"):TEXT("/Game/OrbitBreakout/Materials/M_Metal"));
@@ -33,35 +38,159 @@ namespace OB {
  }
 }
 void UOBSettings::Clamp() {
+ ADSSensitivity=FMath::Clamp(ADSSensitivity,.5f,1.f); TraversalMotion=FMath::Clamp(TraversalMotion,0,2); WallRoll=FMath::Clamp(WallRoll,0.f,8.f);
  MouseSensitivity=FMath::Clamp(MouseSensitivity,.2f,3.f); MasterVolume=FMath::Clamp(MasterVolume,0.f,1.f); EffectsVolume=FMath::Clamp(EffectsVolume,0.f,1.f); AmbienceVolume=FMath::Clamp(AmbienceVolume,0.f,1.f); GraphicsPreset=FMath::Clamp(GraphicsPreset,0,2); CameraShakeScale=FMath::Clamp(CameraShakeScale,0.f,1.f);
 }
-bool UOBMissionSave::IsValidSave() const { return SchemaVersion==1 && MissionId==TEXT("EmergencyDeparture") && CheckpointId>=0 && CheckpointId<=2 && ReserveAmmo>=0 && ReserveAmmo<=144 && HelixReserveAmmo>=0 && HelixReserveAmmo<=180 && (!bHelixOwned || CheckpointId==2); }
+void UOBMissionSave::SetCheckpointIdentity(int32 Id) {
+ CheckpointId=Id;
+ static const FName L1Keys[]={TEXT("L1.Cell"),TEXT("L1.Cargo"),TEXT("L1.Reactor")};
+ static const FName L2Keys[]={TEXT("L2.Crash"),TEXT("L2.Junction"),TEXT("L2.Power"),TEXT("L2.Finale")};
+ CheckpointKey=ChapterId==2 && Id>=0 && Id<4?L2Keys[Id]:ChapterId==1 && Id>=0 && Id<3?L1Keys[Id]:NAME_None;
+}
+bool UOBMissionSave::IsValidSave() const {
+ if(ReserveAmmo<0 || ReserveAmmo>144 || HelixReserveAmmo<0 || HelixReserveAmmo>180)return false;
+ // Legacy fields are checked under their original Chapter 1 contract only.
+ if(SchemaVersion==1)return MissionId==TEXT("EmergencyDeparture") && CheckpointId>=0 && CheckpointId<=2 && (!bHelixOwned || CheckpointId==2);
+ if(SchemaVersion!=2 || ArcMagazine<0 || ArcMagazine>24 || HelixMagazine<0 || HelixMagazine>36 || SelectedWeapon>1)return false;
+ if(SelectedWeapon==1 && !bHelixOwned)return false;
+ static const FName L1Keys[]={TEXT("L1.Cell"),TEXT("L1.Cargo"),TEXT("L1.Reactor")};
+ static const FName L2Keys[]={TEXT("L2.Crash"),TEXT("L2.Junction"),TEXT("L2.Power"),TEXT("L2.Finale")};
+ if(ChapterId==1)return MissionId==TEXT("EmergencyDeparture") && CheckpointId>=0 && CheckpointId<3 && CheckpointKey==L1Keys[CheckpointId] && (!bHelixOwned || CheckpointId==2) && !bLevel2Completed;
+ if(ChapterId!=2 || MissionId!=TEXT("DeadSignal") || CheckpointId<0 || CheckpointId>3 || CheckpointKey!=L2Keys[CheckpointId] || bPendingChapter2 || !bArcOwned)return false;
+ if(CheckpointId>=1 && (!bLevel2IntroComplete || !bJunctionIsolated || !bJunctionDrained))return false;
+ if(CheckpointId>=2 && (!bCouplerOwned || !bCouplerInserted || !bAuxPowerRestored))return false;
+ if(CheckpointId>=3 && !bWardenDefeated)return false;
+ if(bJunctionDrained && !bJunctionIsolated)return false;
+ if(bCouplerInserted && !bCouplerOwned)return false;
+ if(bAuxPowerRestored && !bCouplerInserted)return false;
+ if(bWardenDefeated && !bAuxPowerRestored)return false;
+ if(bLevel2Completed && (CheckpointId!=3 || !bMissionCompleted))return false;
+ return true;
+}
+bool UOBMissionSave::MigrateLegacy() {
+ if(SchemaVersion==2)return IsValidSave();
+ if(SchemaVersion!=1 || !IsValidSave())return false;
+ SchemaVersion=2;ChapterId=1;SetCheckpointIdentity(CheckpointId);bPendingChapter2=false;
+ bArcOwned=CheckpointId>0;ArcMagazine=bArcOwned?24:0;HelixMagazine=bHelixOwned?36:0;SelectedWeapon=0;
+ return IsValidSave();
+}
 void UOBGameInstance::Init() {
  Super::Init();
+ if(GEngine)TravelFailureHandle=GEngine->OnTravelFailure().AddUObject(this,&UOBGameInstance::OnChapterTravelFailure);
  Settings=Cast<UOBSettings>(UGameplayStatics::LoadGameFromSlot(OB::SettingsSlot,0));
  if(!Settings || Settings->SchemaVersion!=1) Settings=NewObject<UOBSettings>(this);
  Settings->Clamp();
  if(UGameplayStatics::DoesSaveGameExist(OB::MissionSlot,0)) {
   MissionSave=Cast<UOBMissionSave>(UGameplayStatics::LoadGameFromSlot(OB::MissionSlot,0));
-  bSaveValid=MissionSave && MissionSave->IsValidSave();
+  bSaveValid=MissionSave && MissionSave->MigrateLegacy();
   if(!bSaveValid) SaveWarning=TEXT("Previous checkpoint could not be read. Start a New Mission to replace it.");
  }
  if(!MissionSave || !bSaveValid) MissionSave=NewObject<UOBMissionSave>(this);
  ApplySettings();
 }
-bool UOBGameInstance::HasValidSave() const { return bSaveValid && MissionSave && MissionSave->IsValidSave(); }
-void UOBGameInstance::NewMission() {
- MissionSave=NewObject<UOBMissionSave>(this); bSaveValid=true; bFrontEnd=false; SaveCheckpoint(); ReloadMission();
+void UOBGameInstance::Shutdown() {
+ if(GEngine && TravelFailureHandle.IsValid())GEngine->OnTravelFailure().Remove(TravelFailureHandle);
+ Super::Shutdown();
 }
-void UOBGameInstance::ContinueMission() { if(!HasValidSave()) return; if(MissionSave->bMissionCompleted) {NewMission();return;} bFrontEnd=false; ReloadMission(); }
-void UOBGameInstance::ReturnToMenu() { bFrontEnd=true; ReloadMission(); }
-void UOBGameInstance::ReloadMission() { if(auto* PC=UGameplayStatics::GetPlayerController(this,0)) PC->SetPause(false); UGameplayStatics::OpenLevel(this,OB::MissionMap); }
+bool UOBGameInstance::HasValidSave() const { return bSaveValid && MissionSave && MissionSave->IsValidSave(); }
+void UOBGameInstance::RestoreCampaignSession() {
+ if(!bDevelopmentChapterSession)return;
+ MissionSave=CampaignSaveSnapshot?CampaignSaveSnapshot.Get():NewObject<UOBMissionSave>(this);
+ bSaveValid=bCampaignSaveSnapshotValid && MissionSave->IsValidSave();
+ CampaignSaveSnapshot=nullptr;bDevelopmentChapterSession=false;bChapterTravelRequested=false;
+}
+void UOBGameInstance::NewMission() {
+ RestoreCampaignSession();MissionSave=NewObject<UOBMissionSave>(this);bSaveValid=true;bFrontEnd=false;bChapterTravelRequested=false;SaveCheckpoint();ReloadMission();
+}
+void UOBGameInstance::ContinueMission() {
+ RestoreCampaignSession();if(!HasValidSave())return;
+ if(MissionSave->ChapterId==2 && MissionSave->bLevel2Completed){ReplayLevel2();return;}
+ // An old completed Chapter 1 save remains useful after the campaign upgrade.
+ if(MissionSave->ChapterId==1 && MissionSave->bMissionCompleted){
+  MissionSave->bPendingChapter2=true;MissionSave->bArcOwned=true;MissionSave->ArcMagazine=24;
+ }
+ bFrontEnd=false;ReloadMission();
+}
+void UOBGameInstance::ReturnToMenu() { RestoreCampaignSession();bFrontEnd=true;bChapterTravelRequested=false;ReloadMission(); }
+void UOBGameInstance::ReloadMission() {
+ if(auto* PC=UGameplayStatics::GetPlayerController(this,0))PC->SetPause(false);
+ FName Destination=OB::MissionMap;
+ if(!bFrontEnd && MissionSave && (MissionSave->ChapterId==2 || MissionSave->bPendingChapter2))Destination=OB::Level2Map;
+ if(Destination==OB::Level2Map && !FPackageName::DoesPackageExist(Destination.ToString())){
+  SaveWarning=TEXT("Dead Signal map is unavailable. Your campaign checkpoint is preserved.");
+  UE_LOG(LogTemp,Error,TEXT("OB_CHAPTER_MAP_MISSING %s"),*Destination.ToString());
+  bChapterTravelRequested=false;bFrontEnd=true;Destination=OB::MissionMap;
+ }
+ else bChapterTravelRequested=Destination==OB::Level2Map;
+ UGameplayStatics::OpenLevel(this,Destination);
+}
 bool UOBGameInstance::SaveCheckpoint() {
- if(!MissionSave || !MissionSave->IsValidSave()) return false;
- bool OK=UGameplayStatics::SaveGameToSlot(MissionSave,OB::MissionSlot,0);
+ if(!MissionSave || !MissionSave->IsValidSave()){
+  SaveWarning=TEXT("Progress remains in this session; the checkpoint state could not be saved.");
+  UE_LOG(LogTemp,Error,TEXT("OB_SAVE_REJECTED invalid chapter/checkpoint snapshot"));return false;
+ }
+ const FString& Slot=bDevelopmentChapterSession?OB::DevelopmentSlot:OB::MissionSlot;
+ const bool OK=UGameplayStatics::SaveGameToSlot(MissionSave,Slot,0);
+ bSaveValid=true;
  SaveWarning=OK?TEXT(""):TEXT("Checkpoint reached — disk save unavailable. Previous disk progress may remain.");
- if(!OK) UE_LOG(LogTemp,Error,TEXT("Orbit Breakout: mission disk save failed; in-memory checkpoint retained."));
+ if(!OK)UE_LOG(LogTemp,Error,TEXT("Orbit Breakout: mission disk save failed; in-memory checkpoint retained."));
  return OK;
+}
+bool UOBGameInstance::TransitionToLevel2(AOBPlayerCharacter* Player) {
+ if(bChapterTravelRequested)return true;
+ if(!Player || Player->bDead || !MissionSave || MissionSave->ChapterId!=1)return false;
+ if(!FPackageName::DoesPackageExist(OB::Level2Map.ToString())){
+  SaveWarning=TEXT("Escape reached. Dead Signal is unavailable; your last checkpoint is preserved.");
+  UE_LOG(LogTemp,Error,TEXT("OB_CHAPTER_TRANSITION_BLOCKED missing DeadSignal map"));return false;
+ }
+ // Keep Chapter 1 and its stable checkpoint intact until the destination initializes.
+ MissionSave->SchemaVersion=2;MissionSave->ChapterId=1;MissionSave->SetCheckpointIdentity(MissionSave->CheckpointId);
+ MissionSave->bPendingChapter2=true;MissionSave->bMissionCompleted=false;
+ MissionSave->bArcOwned=Player->bWeaponOwned;MissionSave->bHelixOwned=Player->bHelixOwned;
+ MissionSave->ArcMagazine=Player->GetArcMagazineAmmo();MissionSave->ReserveAmmo=Player->GetArcReserveAmmo();
+ MissionSave->HelixMagazine=Player->GetHelixMagazineAmmo();MissionSave->HelixReserveAmmo=Player->GetHelixReserveAmmo();
+ MissionSave->SelectedWeapon=static_cast<uint8>(Player->EquippedWeapon);
+ bSaveValid=true;bFrontEnd=false;bChapterTravelRequested=true;SaveCheckpoint();
+ UE_LOG(LogTemp,Display,TEXT("OB_CHAPTER_TRANSITION_REQUESTED from=EmergencyDeparture to=DeadSignal"));
+ ReloadMission();return true;
+}
+void UOBGameInstance::BeginLevel2Session() {
+ const bool bCampaignHandoff=!bDevelopmentChapterSession && !bFrontEnd && MissionSave && MissionSave->ChapterId==1 && MissionSave->bPendingChapter2;
+ const bool bExistingChapter=!bFrontEnd && MissionSave && MissionSave->ChapterId==2 && MissionSave->IsValidSave();
+ if(bCampaignHandoff){
+  UOBMissionSave* Next=DuplicateObject<UOBMissionSave>(MissionSave,this);
+  Next->MissionId=TEXT("DeadSignal");Next->ChapterId=2;Next->SetCheckpointIdentity(0);Next->bPendingChapter2=false;Next->bMissionCompleted=false;
+  Next->bLevel2IntroComplete=false;Next->bJunctionIsolated=false;Next->bJunctionDrained=false;Next->bCouplerOwned=false;Next->bCouplerInserted=false;
+  Next->bAuxPowerRestored=false;Next->bWardenDefeated=false;Next->bStabilizerA=false;Next->bStabilizerB=false;Next->bLevel2Completed=false;
+  MissionSave=Next;
+ }else if(!bExistingChapter){
+  if(!bDevelopmentChapterSession){CampaignSaveSnapshot=MissionSave;bCampaignSaveSnapshotValid=bSaveValid;}
+  bDevelopmentChapterSession=true;MissionSave=NewObject<UOBMissionSave>(this);
+  MissionSave->MissionId=TEXT("DeadSignal");MissionSave->ChapterId=2;MissionSave->SetCheckpointIdentity(0);
+  MissionSave->bArcOwned=true;MissionSave->ArcMagazine=24;MissionSave->ReserveAmmo=72;
+  MissionSave->bHelixOwned=true;MissionSave->HelixMagazine=36;MissionSave->HelixReserveAmmo=72;
+ }
+ bChapterTravelRequested=false;bFrontEnd=false;bSaveValid=MissionSave && MissionSave->IsValidSave();
+ // A loaded world is a safe restart location even before the crash finishes.
+ // Failed persistence leaves the original pending-transition slot on disk.
+ if(bCampaignHandoff)SaveCheckpoint();
+ UE_LOG(LogTemp,Display,TEXT("OB_LEVEL2_SESSION chapter=%d checkpoint=%d development=%d pendingConsumed=%d"),MissionSave->ChapterId,MissionSave->CheckpointId,bDevelopmentChapterSession,bCampaignHandoff);
+}
+void UOBGameInstance::ReplayLevel2() {
+ if(!FPackageName::DoesPackageExist(OB::Level2Map.ToString())){SaveWarning=TEXT("Dead Signal map is unavailable. Your campaign checkpoint is preserved.");return;}
+ if(!bDevelopmentChapterSession){CampaignSaveSnapshot=MissionSave;bCampaignSaveSnapshotValid=bSaveValid;}
+ bDevelopmentChapterSession=true;bFrontEnd=false;MissionSave=NewObject<UOBMissionSave>(this);
+ MissionSave->MissionId=TEXT("DeadSignal");MissionSave->ChapterId=2;MissionSave->SetCheckpointIdentity(0);
+ MissionSave->bArcOwned=true;MissionSave->ArcMagazine=24;MissionSave->ReserveAmmo=72;
+ MissionSave->bHelixOwned=true;MissionSave->HelixMagazine=36;MissionSave->HelixReserveAmmo=72;
+ bSaveValid=true;ReloadMission();
+}
+void UOBGameInstance::OnChapterTravelFailure(UWorld* World,ETravelFailure::Type Failure,const FString& Error) {
+ if(!bChapterTravelRequested || (World && World->GetGameInstance()!=this))return;
+ bChapterTravelRequested=false;bFrontEnd=true;
+ SaveWarning=TEXT("Chapter loading failed. Your checkpoint is preserved; Continue can retry.");
+ UE_LOG(LogTemp,Error,TEXT("OB_CHAPTER_TRAVEL_FAILED type=%d %s"),static_cast<int32>(Failure),*Error);
+ if(auto* PC=Cast<AOBPlayerController>(UGameplayStatics::GetPlayerController(this,0)))PC->ShowScreen(TEXT("Main"));
 }
 void UOBGameInstance::SaveSettings() { Settings->Clamp(); ApplySettings(); if(!UGameplayStatics::SaveGameToSlot(Settings,OB::SettingsSlot,0)) SaveWarning=TEXT("Settings apply this session; disk save unavailable."); }
 void UOBGameInstance::ApplySettings() {
@@ -99,7 +228,7 @@ void AOBInteractable::OnConstruction(const FTransform& T) {
  case EOBInteractionKind::HeavyWeapon:Size=FVector(48,120,115);Color=FVector(.05,.16,.19);Text=TEXT("HELIX-12 / PLASMA REPEATER");break;
  case EOBInteractionKind::AmmoStation:Size=FVector(42,90,130);Text=TEXT("SECURITY AMMUNITION");break;
  case EOBInteractionKind::Terminal:Size=FVector(70,115,115);Text=TEXT("TRANSIT CONTROL");break;
- case EOBInteractionKind::Pod:Size=FVector(240,240,280);Text=TEXT("POD 07 / EMERGENCY DEPARTURE");break;
+ case EOBInteractionKind::Pod:Size=FVector(45,75,95);Text=TEXT("STAR SPARROW / BOARDING");break;
  case EOBInteractionKind::Medical:Size=FVector(32,48,34);Text=TEXT("+  MEDICAL");break;
  case EOBInteractionKind::Ammo:Size=FVector(26,38,40);Text=TEXT("III  ENERGY CELLS");break;
  }
@@ -117,9 +246,25 @@ void AOBInteractable::OnConstruction(const FTransform& T) {
   WeaponDisplayRail->SetRelativeLocation(FVector(-Size.X*.5f-14,10,Size.Z*.65f+5));WeaponDisplayRail->SetRelativeScale3D(FVector(.025,.42,.025));
   OB::Paint(WeaponDisplayRail,FLinearColor(.08,1,.65),true);
  }
+ if(Kind==EOBInteractionKind::Pod){
+  auto* Ship=LoadObject<UStaticMesh>(nullptr,TEXT("/Game/StarSparrow/Meshes/Examples/SM_StarSparrow01.SM_StarSparrow01"));
+  if(Ship){
+   WeaponDisplay->SetStaticMesh(Ship);WeaponDisplay->EmptyOverrideMaterials();WeaponDisplay->SetVisibility(true);
+   const FVector Extent=Ship->GetBounds().BoxExtent;
+   const float Scale=FMath::Min(720.f/FMath::Max(1.f,Extent.X*2),650.f/FMath::Max(1.f,Extent.Y*2));
+   WeaponDisplay->SetRelativeScale3D(FVector(Scale));WeaponDisplay->SetRelativeRotation(FRotator::ZeroRotator);
+   WeaponDisplay->SetRelativeLocation(FVector(490,0,100+Extent.Z*Scale)-Ship->GetBounds().Origin*Scale);
+  }
+ }
  Body->SetCollisionEnabled(Kind==EOBInteractionKind::Medical||Kind==EOBInteractionKind::Ammo?ECollisionEnabled::NoCollision:ECollisionEnabled::QueryAndPhysics);
 }
-void AOBInteractable::BeginPlay() {Super::BeginPlay();OnConstruction(GetActorTransform());}
+void AOBInteractable::BeginPlay() {
+ Super::BeginPlay();OnConstruction(GetActorTransform());
+ if(Kind==EOBInteractionKind::Pod){
+  TArray<AActor*> Children;GetAttachedActors(Children);
+  for(auto* Child:Children){Child->SetActorHiddenInGame(true);Child->SetActorEnableCollision(false);}
+ }
+}
 void AOBInteractable::SetUsed() {bUsed=true;if(Kind==EOBInteractionKind::Weapon||Kind==EOBInteractionKind::HeavyWeapon||Kind==EOBInteractionKind::Medical||Kind==EOBInteractionKind::Ammo){SetActorHiddenInGame(true);SetActorEnableCollision(false);}else if(Kind==EOBInteractionKind::Terminal){Label->SetText(FText::FromString(TEXT("OVERRIDE ACCEPTED")));}}
 FString AOBInteractable::GetPrompt() const {
  switch(Kind) {
@@ -127,7 +272,7 @@ FString AOBInteractable::GetPrompt() const {
  case EOBInteractionKind::HeavyWeapon:return TEXT("E — Take HELIX-12 plasma repeater");
  case EOBInteractionKind::AmmoStation:return TEXT("E — Replenish ammunition");
  case EOBInteractionKind::Terminal:return bUsed?TEXT("Override accepted"):TEXT("Hold E — Bypass security (2 sec)");
- case EOBInteractionKind::Pod: {auto* D=AOBMissionDirector::Get(this);return D&&D->Phase==EOBPhase::BoardPod?TEXT("Hold E — Launch escape pod (1 sec)"):TEXT("Secure the bay before launch");}
+ case EOBInteractionKind::Pod: {auto* D=AOBMissionDirector::Get(this);return D&&D->Phase==EOBPhase::BoardPod?TEXT("Hold E — Board Star Sparrow (1 sec)"):TEXT("Secure the bay before launch");}
  default:return TEXT("");
  }
 }
@@ -148,6 +293,7 @@ AOBMissionDirector::AOBMissionDirector(){PrimaryActorTick.bCanEverTick=true;}
 AOBMissionDirector* AOBMissionDirector::Get(const UObject* Context){if(!Context||!Context->GetWorld())return nullptr;TActorIterator<AOBMissionDirector> It(Context->GetWorld());if(It)return *It;return nullptr;}
 void AOBMissionDirector::BeginPlay(){
  Super::BeginPlay();
+ AOBTraversalRoute::Install(*this,false);
  for(TActorIterator<AOBEnemyCharacter> It(GetWorld());It;++It){Enemies.Add(*It);ExpectedRoster.FindOrAdd(It->EncounterId).Add(It->StableId);}
  for(TActorIterator<AOBDoor> It(GetWorld());It;++It)Doors.Add(*It);
  for(TActorIterator<AOBInteractable> It(GetWorld());It;++It)Interactions.Add(*It);
@@ -361,7 +507,7 @@ void AOBMissionDirector::ResolveEnemy(int32 Id,FName StableId){
  case 3:Phase=EOBPhase::Terminal;ShowMessage(TEXT("Forward transit locked. Use the security terminal."));break;
  case 4:Phase=EOBPhase::Reactor;ShowMessage(TEXT("Transit access restored. Proceed to reactor."));break;
  case 5:Phase=EOBPhase::PodBay;ShowMessage(TEXT("Evacuation route open. Reach the escape-pod bay."));PlaySound(TEXT("Alarm"),Player->GetActorLocation(),.45f,true);break;
- case 6:Phase=EOBPhase::BoardPod;ShowMessage(TEXT("Bay secured. Pod 07 is ready for departure."));break;
+ case 6:Phase=EOBPhase::BoardPod;ShowMessage(TEXT("Bay secured. Star Sparrow is ready for departure."));break;
  }
  RefreshDoors();PlaySound(TEXT("Checkpoint"),Player->GetActorLocation(),.5f);
 }
@@ -385,7 +531,8 @@ void AOBMissionDirector::CommitCheckpoint(int32 Id){
  const int32 ArcReserve=FMath::Max(Player->GetArcReserveAmmo(),96),HelixReserve=FMath::Max(Player->GetHelixReserveAmmo(),108);
  CancelHold();Player->RestoreLoadout(true,Player->GetArcMagazineCapacity(),ArcReserve);
  if(bHadHelix)Player->RestoreHeavyWeapon(true,HelixReserve,bHadHelixEquipped);
- GI->MissionSave->CheckpointId=Id;GI->MissionSave->ReserveAmmo=Player->GetArcReserveAmmo();
+ GI->MissionSave->SetCheckpointIdentity(Id);GI->MissionSave->ReserveAmmo=Player->GetArcReserveAmmo();
+ GI->MissionSave->bArcOwned=Player->bWeaponOwned;GI->MissionSave->ArcMagazine=Player->GetArcMagazineAmmo();GI->MissionSave->HelixMagazine=Player->GetHelixMagazineAmmo();GI->MissionSave->SelectedWeapon=static_cast<uint8>(Player->EquippedWeapon);
  GI->MissionSave->bHelixOwned=bHadHelix;GI->MissionSave->HelixReserveAmmo=bHadHelix?Player->GetHelixReserveAmmo():0;GI->bSaveValid=true;
  bool Saved=GI->SaveCheckpoint();ShowMessage(Saved?TEXT("Checkpoint saved — health and ammunition restored."):GI->SaveWarning);PlaySound(TEXT("Checkpoint"),Player->GetActorLocation());
  UE_LOG(LogTemp,Display,TEXT("OB_CHECKPOINT CP%02d reserve=%d disk=%d"),Id,Player->ReserveAmmo,Saved);
@@ -398,7 +545,7 @@ void AOBMissionDirector::RetryCheckpoint(){CancelBossIntro();CancelHold();Attack
 void AOBMissionDirector::PlayerDied(){if(bDeathHandled||Phase==EOBPhase::Ending||Phase==EOBPhase::Complete)return;bDeathHandled=true;FinishBossIntro(false);CancelHold();AttackSlots.Empty();GetWorldTimerManager().ClearTimer(CargoWaveTimer);if(Player)Player->CancelActions();GetWorldTimerManager().SetTimer(DeathTimer,[this](){if(auto* PC=Cast<AOBPlayerController>(UGameplayStatics::GetPlayerController(this,0)))PC->ShowScreen(TEXT("Dead"));},.75f,false);}
 FString AOBMissionDirector::GetObjectiveText() const {
  switch(Phase){
- case EOBPhase::Cell:return TEXT("Leave the cell. Take the security blaster.");case EOBPhase::Corridor:return TEXT("Clear the security corridor.");case EOBPhase::Cargo:return TEXT("Fight through cargo processing.");case EOBPhase::Terminal:return TEXT("Bypass the transit terminal.");case EOBPhase::Security:return TEXT("Clear the security response.");case EOBPhase::Reactor:return Player&&!Player->bHelixOwned?TEXT("Take HELIX-12 before entering containment."):TEXT("Defeat the Bull sentinel. Reach evacuation.");case EOBPhase::PodBay:return TEXT("Secure the escape-pod bay.");case EOBPhase::BoardPod:return TEXT("Launch the escape pod.");case EOBPhase::Ending:return TEXT("Emergency departure in progress.");case EOBPhase::Complete:return TEXT("Rook is clear. Mission complete.");}return TEXT("");
+ case EOBPhase::Cell:return TEXT("Leave the cell. Take the security blaster.");case EOBPhase::Corridor:return TEXT("Clear the security corridor.");case EOBPhase::Cargo:return TEXT("Fight through cargo processing.");case EOBPhase::Terminal:return TEXT("Bypass the transit terminal.");case EOBPhase::Security:return TEXT("Clear the security response.");case EOBPhase::Reactor:return Player&&!Player->bHelixOwned?TEXT("Take HELIX-12 before entering containment."):TEXT("Defeat the Bull sentinel. Reach evacuation.");case EOBPhase::PodBay:return TEXT("Secure the escape-pod bay.");case EOBPhase::BoardPod:return TEXT("Board Star Sparrow and launch.");case EOBPhase::Ending:return TEXT("Emergency departure in progress.");case EOBPhase::Complete:return TEXT("Rook is clear. Mission complete.");}return TEXT("");
 }
 void AOBMissionDirector::ShowMessage(const FString& Text,float Seconds){SystemMessage=Text;SystemMessageUntil=GetWorld()->GetTimeSeconds()+Seconds;}
 bool AOBMissionDirector::ValidInteraction(AOBPlayerCharacter* P,AOBInteractable* I) const {
@@ -465,10 +612,17 @@ void AOBMissionDirector::BeginEnding(){
  const FVector Focus=PodPosition+FVector(400,0,240);
  EndingCamera=GetWorld()->SpawnActor<ACameraActor>(ACameraActor::StaticClass(),CameraPosition,(Focus-CameraPosition).Rotation());
  if(IsValid(EndingCamera))if(auto* PC=UGameplayStatics::GetPlayerController(this,0))PC->SetViewTargetWithBlend(EndingCamera,.5f);
- PlaySound(TEXT("Launch"),Player->GetActorLocation());ShowMessage(TEXT("Pod 07 released. You are clear of the Helios Ark."),9);
+ PlaySound(TEXT("Launch"),Player->GetActorLocation());ShowMessage(TEXT("Star Sparrow released. You are clear of the Helios Ark."),9);
  UE_LOG(LogTemp,Display,TEXT("OB_ENDING_STARTED"));
 }
-void AOBMissionDirector::CompleteMission(){if(Phase!=EOBPhase::Ending)return;Phase=EOBPhase::Complete;if(auto* GI=GetGameInstance<UOBGameInstance>()){if(GI->MissionSave){GI->MissionSave->bMissionCompleted=true;GI->bSaveValid=true;GI->SaveCheckpoint();}}if(auto* PC=Cast<AOBPlayerController>(UGameplayStatics::GetPlayerController(this,0)))PC->ShowScreen(TEXT("Complete"));UE_LOG(LogTemp,Display,TEXT("OB_MISSION_COMPLETE"));}
+void AOBMissionDirector::CompleteMission(){
+ if(Phase!=EOBPhase::Ending)return;
+ if(auto* GI=GetGameInstance<UOBGameInstance>()){
+  const bool bRequested=GI->TransitionToLevel2(Player);Phase=EOBPhase::Complete;
+  if(!bRequested){GI->bFrontEnd=true;ShowMessage(GI->SaveWarning,10.f);if(auto* PC=Cast<AOBPlayerController>(UGameplayStatics::GetPlayerController(this,0)))PC->ShowScreen(TEXT("Main"));}
+  UE_LOG(LogTemp,Display,TEXT("OB_LEVEL1_ESCAPE_COMPLETE transition=%d"),bRequested);
+ }
+}
 void AOBMissionDirector::PlaySound(FName Cue,FVector Location,float Volume,bool IsAmbience){
  auto* Sound=Sounds.Find(Cue);if(!Sound||!*Sound)return;auto* GI=GetGameInstance<UOBGameInstance>();float Gain=Volume;if(GI&&GI->Settings)Gain*=GI->Settings->MasterVolume*(IsAmbience?GI->Settings->AmbienceVolume:GI->Settings->EffectsVolume);
  if(Player)Gain*=FMath::Clamp(1.f-FVector::Dist(Player->GetActorLocation(),Location)/6000.f,.05f,1.f);

@@ -1,6 +1,7 @@
 #pragma once
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "Engine/EngineBaseTypes.h"
 #include "GameFramework/SaveGame.h"
 #include "GameFramework/GameModeBase.h"
 #include "GameFramework/Actor.h"
@@ -14,6 +15,9 @@ UCLASS() class ORBITBREAKOUT_API UOBSettings:public USaveGame {
  GENERATED_BODY()
 public:
  UPROPERTY() int32 SchemaVersion=1;
+ UPROPERTY() float ADSSensitivity=.8f;
+ UPROPERTY() int32 TraversalMotion=1;
+ UPROPERTY() float WallRoll=6.f;
  UPROPERTY() float MouseSensitivity=1.f;
  UPROPERTY() bool bInvertVerticalLook=false;
  UPROPERTY() float MasterVolume=.8f;
@@ -27,7 +31,7 @@ public:
 UCLASS() class ORBITBREAKOUT_API UOBMissionSave:public USaveGame {
  GENERATED_BODY()
 public:
- UPROPERTY() int32 SchemaVersion=1;
+ UPROPERTY() int32 SchemaVersion=2;
  UPROPERTY() FName MissionId="EmergencyDeparture";
  UPROPERTY() int32 CheckpointId=0;
  UPROPERTY() bool bMissionCompleted=false;
@@ -35,12 +39,34 @@ public:
  // Additive schema-1 fields: older checkpoints deserialize to an unclaimed rack.
  UPROPERTY() bool bHelixOwned=false;
  UPROPERTY() int32 HelixReserveAmmo=0;
+ // Schema 2 is additive: absent legacy fields migrate to Chapter 1 explicitly.
+ UPROPERTY() int32 ChapterId=1;
+ UPROPERTY() FName CheckpointKey="L1.Cell";
+ UPROPERTY() bool bPendingChapter2=false;
+ UPROPERTY() bool bArcOwned=false;
+ UPROPERTY() int32 ArcMagazine=0;
+ UPROPERTY() int32 HelixMagazine=0;
+ UPROPERTY() uint8 SelectedWeapon=0;
+ UPROPERTY() bool bLevel2IntroComplete=false;
+ UPROPERTY() bool bJunctionIsolated=false;
+ UPROPERTY() bool bJunctionDrained=false;
+ UPROPERTY() bool bCouplerOwned=false;
+ UPROPERTY() bool bCouplerInserted=false;
+ UPROPERTY() bool bAuxPowerRestored=false;
+ UPROPERTY() bool bWardenDefeated=false;
+ UPROPERTY() bool bStabilizerA=false;
+ UPROPERTY() bool bStabilizerB=false;
+ UPROPERTY() bool bLevel2Completed=false;
  bool IsValidSave() const;
+ bool MigrateLegacy();
+ void SetCheckpointIdentity(int32 Id);
+
 };
 UCLASS() class ORBITBREAKOUT_API UOBGameInstance:public UGameInstance {
  GENERATED_BODY()
 public:
  virtual void Init() override;
+ virtual void Shutdown() override;
  UPROPERTY() TObjectPtr<UOBSettings> Settings;
  UPROPERTY() TObjectPtr<UOBMissionSave> MissionSave;
  UPROPERTY() bool bFrontEnd=true;
@@ -54,6 +80,19 @@ public:
  UFUNCTION(BlueprintCallable) void ApplySettings();
  bool SaveCheckpoint();
  void ReloadMission();
+ UFUNCTION(BlueprintCallable) bool TransitionToLevel2(AOBPlayerCharacter* Player);
+ /** Called by the Level 2 director only after the destination world exists. */
+ UFUNCTION(BlueprintCallable) void BeginLevel2Session();
+ UFUNCTION(BlueprintCallable) void ReplayLevel2();
+ UPROPERTY(BlueprintReadOnly) bool bDevelopmentChapterSession=false;
+ UPROPERTY(BlueprintReadOnly) bool bChapterTravelRequested=false;
+private:
+ UPROPERTY(Transient) TObjectPtr<UOBMissionSave> CampaignSaveSnapshot;
+ bool bCampaignSaveSnapshotValid=false;
+ FDelegateHandle TravelFailureHandle;
+ void RestoreCampaignSession();
+ void OnChapterTravelFailure(UWorld* World,ETravelFailure::Type Failure,const FString& Error);
+
 };
 
 UCLASS() class ORBITBREAKOUT_API AOBDoor:public AActor {
@@ -86,7 +125,7 @@ public:
  UPROPERTY(VisibleAnywhere) TObjectPtr<UStaticMeshComponent> WeaponDisplayRail;
  virtual void OnConstruction(const FTransform&) override;
  virtual void BeginPlay() override;
- FString GetPrompt() const;
+ virtual FString GetPrompt() const;
  bool bUsed=false; float CooldownUntil=0;
  void SetUsed();
 };
@@ -111,6 +150,7 @@ UCLASS() class ORBITBREAKOUT_API AOBMissionDirector:public AActor {
  GENERATED_BODY()
 public:
  AOBMissionDirector();
+ UPROPERTY(EditAnywhere,Category="Orbit|Traversal") bool bEnableParkour=true;
  static AOBMissionDirector* Get(const UObject* Context);
  virtual void BeginPlay() override;
  virtual void Tick(float) override;
@@ -129,34 +169,34 @@ public:
  UPROPERTY() TArray<TObjectPtr<AOBDoor>> Doors;
  UPROPERTY() TArray<TObjectPtr<AOBInteractable>> Interactions;
  UPROPERTY() TObjectPtr<AOBInteractable> HoldTarget;
- bool IsCombatAllowed() const;
- bool IsGameplayActive() const;
+ virtual bool IsCombatAllowed() const;
+ virtual bool IsGameplayActive() const;
  UFUNCTION(BlueprintPure, Category="Orbit|Boss Intro") bool IsBossIntroActive() const { return bBossIntroActive; }
  UFUNCTION(BlueprintPure, Category="Orbit|Boss Intro") bool IsBossIntroReturning() const { return bBossIntroReturning; }
  UFUNCTION(BlueprintPure, Category="Orbit|Boss Intro") float GetBossIntroElapsed() const { return BossIntroElapsed; }
  UFUNCTION(BlueprintCallable, Category="Orbit|Boss Intro") bool BeginBossIntro(AOBEnemyCharacter* Boss);
  UFUNCTION(BlueprintCallable, Category="Orbit|Boss Intro") void CancelBossIntro();
- bool TryAcquireAttackSlot(AActor* Enemy);
- void ReleaseAttackSlot(AActor* Enemy);
- void ResolveEnemy(int32 EncounterId,FName StableId);
+ virtual bool TryAcquireAttackSlot(AActor* Enemy);
+ virtual void ReleaseAttackSlot(AActor* Enemy);
+ virtual void ResolveEnemy(int32 EncounterId,FName StableId);
  void ActivateEncounter(int32 EncounterId);
- void EnterZone(int32 Zone,bool bCheckpoint);
- void CommitCheckpoint(int32 Id);
- void RetryCheckpoint();
- void PlayerDied();
+ virtual void EnterZone(int32 Zone,bool bCheckpoint);
+ virtual void CommitCheckpoint(int32 Id);
+ virtual void RetryCheckpoint();
+ virtual void PlayerDied();
  void WeaponAcquired();
  void BeginEnding();
- void CompleteMission();
- FString GetObjectiveText() const;
+ virtual void CompleteMission();
+ virtual FString GetObjectiveText() const;
  void ShowMessage(const FString&,float Seconds=4);
- AOBInteractable* FindInteraction(AOBPlayerCharacter*) const;
- bool TryInteract(AOBPlayerCharacter*,AOBInteractable*);
- void UpdateHold(AOBPlayerCharacter*,AOBInteractable*,float DeltaSeconds);
- void CancelHold();
- void PlaySound(FName Cue,FVector Location,float Volume=1.f,bool bAmbience=false);
+ virtual AOBInteractable* FindInteraction(AOBPlayerCharacter*) const;
+ virtual bool TryInteract(AOBPlayerCharacter*,AOBInteractable*);
+ virtual void UpdateHold(AOBPlayerCharacter*,AOBInteractable*,float DeltaSeconds);
+ virtual void CancelHold();
+ virtual void PlaySound(FName Cue,FVector Location,float Volume=1.f,bool bAmbience=false);
  float GetEndingElapsed() const { return EndingElapsed; }
- int32 GetRemainingEnemies() const;
- bool ValidateContent(FString& Errors) const;
+ virtual int32 GetRemainingEnemies() const;
+ virtual bool ValidateContent(FString& Errors) const;
 private:
  TSet<TWeakObjectPtr<AActor>> AttackSlots;
  TMap<int32,TSet<FName>> Resolved;

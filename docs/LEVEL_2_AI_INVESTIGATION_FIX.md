@@ -1,0 +1,17 @@
+# Dead Signal reinforcement investigation
+
+Announced reinforcements (freight 205 and finale 210–213) can start more than 1,900 cm from the player behind entry baffles. The original activation entered unaware idle, so neither sight nor the shorter hearing radius necessarily let them leave the doorway. Applying scripted damage could clear those enemies while hiding this gameplay defect.
+
+Activation now supplies one fixed player-position report from the security alarm. The machine navigates to that reported area for a distance-based allowance of 8–20 seconds. Actual sight replaces the report and returns to ordinary eight-second sight memory. The alarm does not grant line of sight, fire authorization, permanent player tracking, teleportation, or another attack slot. Other encounters, including the Warden introduction, retain their original detection behavior. Reset and death clear the initial investigation deadline.
+
+`OrbitBreakout.Level2.Machines.ShieldsAndCleanup` now also checks that regular maintenance encounters reject this remote report, announced reinforcements enter search at a fixed destination without visibility, long entry routes receive a bounded allowance, and retry clears the report. This note records the source change and test coverage; test execution and in-map behavior are reported by the build/runtime results, not claimed here.
+
+## North-cover approach regression
+
+The full automated mission run passed 67 checks but reported three north-entry Cutters that never reached an attack before the harness's 18-second diagnostic damage fallback. The isolated `CUTTER_APPROACH_PROBE.json` reproduced this with only E211_04 active: at 7.33 seconds it stopped about 486 cm from the player, despite a clear sight ray, a complete navigation route and no collision at its position. The AI follower became Idle, so this was not attack-slot contention or contact with cover.
+
+UE 5.8's `UPathFollowingComponent::HasReachedDestination` uses the current segment destination when `bMoveToGoalOnLastSegment` is enabled. The precise completion check can begin before the final segment when the remaining path falls within the requested acceptance radius. The old Cutter acceptance of 288 cm therefore accepted the next cover corner, roughly 243 cm away, while the player remained outside the 400 cm attack range. Reissuing the same request repeated that completion.
+
+`CUTTER_TOLERANCE_PROBE.json` confirmed the cause with the same actor, goal and collision: perception tick paused, native MoveToLocation with acceptance 288 immediately finished again; acceptance 45 kept following the same path and reached the player. No path points, collision or movement speed were edited. Both calls returned RequestSuccessful; the follower's subsequent state revealed the difference. The campaign hash remained unchanged.
+
+Approach requests now use 45 cm navigation acceptance for every archetype. Existing sight and attack-distance checks still stop the approach at the intended combat range. Search, reposition, recovery, spawn rules, health, attack slots and telegraphs are unchanged. The machine automation test now replays the measured corner path through the real engine path follower, reproduces early completion with the old tolerance, and verifies that the production approach tolerance keeps following the corner. Build/test execution after this change remains the integrator's responsibility; the controlled probe established the fix mechanism before source edits.

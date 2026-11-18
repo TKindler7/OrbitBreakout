@@ -1,0 +1,11 @@
+OrbitBreakout-Mac.zip  SHA-256 d7a8b792f0cc657ef6db527c265cbb338cbe47e0e5b8ef3015263fda70755f84
+
+L1.Cargo  [2026.11.18-06.18.06:292][292]LogAutomationController: Display: Test Completed. Result={Success} Name={ColdResume} Path={OrbitBreakout.Package.ColdResume}
+L1.Cell  [2026.11.18-06.17.59:454][300]LogAutomationController: Display: Test Completed. Result={Success} Name={ColdResume} Path={OrbitBreakout.Package.ColdResume}
+L1.Reactor  [2026.11.18-06.18.13:185][295]LogAutomationController: Display: Test Completed. Result={Success} Name={ColdResume} Path={OrbitBreakout.Package.ColdResume}
+L2.Crash  [2026.11.18-06.18.20:224][296]LogAutomationController: Display: Test Completed. Result={Success} Name={ColdResume} Path={OrbitBreakout.Package.ColdResume}
+L2.Finale  [2026.11.18-06.18.42:338][308]LogAutomationController: Display: Test Completed. Result={Success} Name={ColdResume} Path={OrbitBreakout.Package.ColdResume}
+L2.Junction  [2026.11.18-06.18.27:212][300]LogAutomationController: Display: Test Completed. Result={Success} Name={ColdResume} Path={OrbitBreakout.Package.ColdResume}
+L2.Power  [2026.11.18-06.18.34:415][298]LogAutomationController: Display: Test Completed. Result={Success} Name={ColdResume} Path={OrbitBreakout.Package.ColdResume}
+campaign  [2026.11.18-06.17.43:671][168]LogAutomationController: Display: Test Completed. Result={Success} Name={Campaign} Path={OrbitBreakout.Package.Campaign}
+seed  [2026.11.18-06.17.52:326][305]LogAutomationController: Display: Test Completed. Result={Success} Name={ColdResume} Path={OrbitBreakout.Package.ColdResume}

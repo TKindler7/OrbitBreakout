@@ -2,6 +2,10 @@
 
 A two-chapter, single-player sci-fi game built by Teddy Kindler in Unreal Engine 5.8. Wraith escapes the detention ship in the Star Sparrow, crashes in the underground tunnel, and fights to bring a rescue transmitter online.
 
+## Play on Mac
+
+[Download the Apple silicon Mac build](Releases/OrbitBreakout-Mac.zip), unzip it, and open OrbitBreakout.app. The archive SHA-256 is `d7a8b792f0cc657ef6db527c265cbb338cbe47e0e5b8ef3015263fda70755f84`.
+
 ## Open the Unreal project
 
 1. Install Git LFS and clone the private repository. Run `git lfs pull` from the checkout to download the asset packs.

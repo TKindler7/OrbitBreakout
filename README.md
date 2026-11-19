@@ -4,7 +4,7 @@ A two-chapter, single-player sci-fi game built by Teddy Kindler in Unreal Engine
 
 ## Play on Mac
 
-[Download the Apple silicon Mac build](Releases/OrbitBreakout-Mac.zip), unzip it, and open OrbitBreakout.app. The archive SHA-256 is `d7a8b792f0cc657ef6db527c265cbb338cbe47e0e5b8ef3015263fda70755f84`.
+[Download the Apple silicon Mac build](Releases/OrbitBreakout-Mac.zip), unzip it, and open OrbitBreakout.app. This download uses the original controller look speed. The project source includes the newer, 35% slower right-stick tuning for Wraith and the loader. The archive SHA-256 is `d7a8b792f0cc657ef6db527c265cbb338cbe47e0e5b8ef3015263fda70755f84`.
 
 ## Open the Unreal project
 
